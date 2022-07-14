@@ -21,7 +21,7 @@ const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor } = props;
+  const { tableHead, tableData, tableHeaderColor, editData } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -62,8 +62,8 @@ export default function CustomTable(props) {
                   {/* Actions */}
                   <TableCell className={classes.tableCell} key={key}>
                     <Stack direction="row" spacing={0.5}>
-                      <TableEditButton />
-                      <TableDeleteButton />
+                      <TableEditButton data={editData[key]} />
+                      <TableDeleteButton data={editData[key]} />
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -109,4 +109,5 @@ CustomTable.propTypes = {
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
   tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  editData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };

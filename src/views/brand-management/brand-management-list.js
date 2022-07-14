@@ -67,7 +67,6 @@ export default function BrandManagementPage() {
   };
   const fetchBrand = async () => {
     let res = await axios.get("/Product/GetAllBrands");
-    console.log(res.data);
     setListBrands(res.data);
   };
   const [listBrands, setListBrands] = useState([]);
@@ -124,15 +123,11 @@ export default function BrandManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Brand name", "Disable", "Product", "Actions"]}
+              tableHead={["ID", "Brand name", "Actions"]}
               tableData={listBrands.map((brand) => {
-                return [
-                  brand.brandId,
-                  brand.brandname,
-                  brand.disabled ? "True" : "False",
-                  brand.products,
-                ];
+                return [brand.brandId, brand.brandname];
               })}
+              editData={listBrands}
             />
           </CardBody>
           <TablePagination

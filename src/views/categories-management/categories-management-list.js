@@ -149,23 +149,11 @@ export default function CategoriesManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={[
-                "ID",
-                "Category Name",
-                "Disable",
-                "Products",
-                "Sub-Category",
-                "Actions",
-              ]}
+              tableHead={["ID", "Category Name", "Actions"]}
               tableData={cates.map((cate) => {
-                return [
-                  cate.categoryId,
-                  cate.categoryName,
-                  cate.disabled ? "True" : "False",
-                  cate.products,
-                  cate.subCategories,
-                ];
+                return [cate.categoryId, cate.categoryName];
               })}
+              editData={cates}
             />
           </CardBody>
           <TablePagination

@@ -11,22 +11,36 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import axios from "axios";
 
-export function TableEditButton() {
+export function TableEditButton({ data }) {
   // validation
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
-  console.log(errors);
+  //console.log(data);
+  const onSubmit = async () => {
+    let putData = {
+      brandId: data.brandId,
+      brandname: name,
+      disabled: disabled,
+    };
+    await axios.post("/Product/UpdateBrand", putData);
+    handleCloseEdit();
+    window.location.reload();
+  };
+  //console.log(errors);
 
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
+  const [name, setName] = React.useState(data.brandname);
+  const [disabled, setDisabled] = React.useState(data.disabled);
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -63,45 +77,27 @@ export function TableEditButton() {
               id="name"
               label="Name"
               type="text"
-              fullWidth
-              name="name"
+              name="brandname"
               {...register("name", {
                 required: "Name is required.",
               })}
               error={Boolean(errors.name)}
               helperText={errors.name?.message}
+              onChange={(val) => setName(val.target.value)}
+              value={name}
               variant="outlined"
-              defaultValue="Nguyen Tuan Bang"
-            />
-            <TextField
-              margin="dense"
-              id="email"
-              label="Email Address"
-              type="email"
               fullWidth
-              name="email"
-              {...register("email", {
-                required: "email is required.",
-              })}
-              error={Boolean(errors.email)}
-              helperText={errors.email?.message}
-              variant="outlined"
-              defaultValue="bangntce130421@fpt.edu.vn"
+              // defaultValue="Nguyen Tuan Bang"
             />
-            <TextField
-              margin="dense"
-              id="phone"
-              label="Phone Number"
-              type="text"
-              fullWidth
-              name="phone"
-              {...register("phone", {
-                required: "Phone is required.",
-              })}
-              error={Boolean(errors.phone)}
-              helperText={errors.phone?.message}
-              variant="outlined"
-              defaultValue="0366928662"
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={disabled}
+                  onChange={() => setDisabled(!disabled)}
+                  name="disabled"
+                />
+              }
+              label="Disable"
             />
           </DialogContent>
           <DialogActions>
@@ -114,7 +110,7 @@ export function TableEditButton() {
   );
 }
 
-export function TableDeleteButton() {
+export function TableDeleteButton({ data }) {
   // delete
   const [openDialogDelete, setOpenDialogDelete] = React.useState(false);
 
@@ -124,6 +120,12 @@ export function TableDeleteButton() {
 
   const handleCloseDelete = () => {
     setOpenDialogDelete(false);
+  };
+  const handleYesDelete = async () => {
+    let path = `https://localhost:5001/api/v1/Product/DeleteBrand?id=${data.brandId}`;
+    await axios.delete(path);
+    setOpenDialogDelete(false);
+    window.location.reload();
   };
   return (
     <>
@@ -147,14 +149,21 @@ export function TableDeleteButton() {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete Tsubasa Ozora?
+            Do you want to delete {data.brandname}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDelete}>Yes</Button>
+          <Button onClick={handleYesDelete}>Yes</Button>
           <Button onClick={handleCloseDelete}>No</Button>
         </DialogActions>
       </Dialog>
     </>
   );
 }
+
+TableEditButton.propTypes = {
+  data: PropTypes.object,
+};
+TableDeleteButton.propTypes = {
+  data: PropTypes.object,
+};
