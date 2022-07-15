@@ -25,7 +25,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // validation
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux/es/exports";
+import { getAllBrand } from "actions/brand";
+import { addBrand } from "actions/brand";
 
 export default function BrandManagementPage() {
   // validation
@@ -35,9 +37,10 @@ export default function BrandManagementPage() {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    await axios.post("/Product/AddBrand", data);
+    dispatch(addBrand(data));
     handleClose();
-    fetchBrand();
+    dispatch(getAllBrand());
+    //fetchBrand();
   };
 
   // page
@@ -65,15 +68,21 @@ export default function BrandManagementPage() {
   const handleClose = () => {
     setOpen(false);
   };
-  const fetchBrand = async () => {
-    let res = await axios.get("/Product/GetAllBrands");
-    setListBrands(res.data);
-  };
-  const [listBrands, setListBrands] = useState([]);
-  useEffect(() => {
-    fetchBrand();
-  }, []);
+  // const fetchBrand = async () => {
+  //   let res = await axios.get("/Product/GetAllBrands");
+  //   setListBrands(res.data);
+  // };
+  // const [listBrands, setListBrands] = useState([]);
+  // useEffect(() => {
+  //   fetchBrand();
+  // }, []);
 
+  const dispatch = useDispatch();
+  const listBrands = useSelector((state) => state.brand);
+  useEffect(() => {
+    dispatch(getAllBrand());
+    //listBrands = useSelector((state) => state.brand);
+  }, []);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -125,6 +134,7 @@ export default function BrandManagementPage() {
               tableHeaderColor="primary"
               tableHead={["ID", "Brand name", "Actions"]}
               tableData={listBrands.map((brand) => {
+                console.log(brand);
                 return [brand.brandId, brand.brandname];
               })}
               editData={listBrands}

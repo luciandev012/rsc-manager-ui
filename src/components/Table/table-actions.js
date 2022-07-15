@@ -15,7 +15,8 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { Checkbox, FormControlLabel } from "@mui/material";
-import axios from "axios";
+import { useDispatch } from "react-redux/es/exports";
+import { updateBrand } from "actions/brand";
 
 export function TableEditButton({ data }) {
   // validation
@@ -31,9 +32,9 @@ export function TableEditButton({ data }) {
       brandname: name,
       disabled: disabled,
     };
-    await axios.post("/Product/UpdateBrand", putData);
+    dispatch(updateBrand(putData));
     handleCloseEdit();
-    window.location.reload();
+    //dispatch(getAllBrand());
   };
   //console.log(errors);
 
@@ -41,6 +42,7 @@ export function TableEditButton({ data }) {
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
   const [name, setName] = React.useState(data.brandname);
   const [disabled, setDisabled] = React.useState(data.disabled);
+  const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -122,8 +124,8 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    let path = `https://localhost:5001/api/v1/Product/DeleteBrand?id=${data.brandId}`;
-    await axios.delete(path);
+    //let path = `https://localhost:5001/api/v1/Product/DeleteBrand?id=${data.brandId}`;
+    //await axios.delete(path);
     setOpenDialogDelete(false);
     window.location.reload();
   };

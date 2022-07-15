@@ -10,14 +10,22 @@ import Manager from "layouts/Manager";
 import Auth from "layouts/Auth";
 
 import "assets/css/material-dashboard-react.css?v=1.10.0";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import allReducers from "reducers";
+
+const store = createStore(allReducers, applyMiddleware(thunk));
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Switch>
-      <Route path="/manager" component={Manager} />
-      <Route path="/auth" component={Auth} />
-      <Redirect from="/" to="/manager/dashboard" />
-    </Switch>
-  </BrowserRouter>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/manager" component={Manager} />
+        <Route path="/auth" component={Auth} />
+        <Redirect from="/" to="/manager/dashboard" />
+      </Switch>
+    </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );
