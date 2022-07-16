@@ -42,7 +42,12 @@ export default function BrandManagementPage() {
     dispatch(getAllBrand());
     //fetchBrand();
   };
-
+  const dispatch = useDispatch();
+  const listBrands = useSelector((state) => state.brand);
+  useEffect(() => {
+    dispatch(getAllBrand());
+    //listBrands = useSelector((state) => state.brand);
+  }, []);
   // page
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -77,12 +82,6 @@ export default function BrandManagementPage() {
   //   fetchBrand();
   // }, []);
 
-  const dispatch = useDispatch();
-  const listBrands = useSelector((state) => state.brand);
-  useEffect(() => {
-    dispatch(getAllBrand());
-    //listBrands = useSelector((state) => state.brand);
-  }, []);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -134,7 +133,7 @@ export default function BrandManagementPage() {
               tableHeaderColor="primary"
               tableHead={["ID", "Brand name", "Actions"]}
               tableData={listBrands.map((brand) => {
-                console.log(brand);
+                // console.log(brand);
                 return [brand.brandId, brand.brandname];
               })}
               editData={listBrands}

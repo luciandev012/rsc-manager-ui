@@ -5,13 +5,13 @@ const brand = (state = [], action) => {
     case "CREATE":
       return [...state, action.payload];
     case "UPDATE": {
-      console.log(state);
-      return state.map((brand) => {
-        //console.log(action.payload);
-        brand.brandId != action.payload.brandId ? brand : action.payload;
-      });
+      return state.map((brand) =>
+        brand.brandId !== action.payload.brandId ? brand : action.payload
+      );
     }
-
+    case "DELETE": {
+      return state.filter((brand) => brand.brandId != action.payload);
+    }
     default:
       return state;
   }

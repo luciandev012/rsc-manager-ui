@@ -16,6 +16,12 @@ export const addBrand = (brand) => async (dispatch) => {
 
 export const updateBrand = (brand) => async (dispatch) => {
   await api.updateBrand(brand);
-  //console.log(data);
+  console.log(brand);
   dispatch({ type: "UPDATE", payload: brand });
+  //getAllBrand();
+};
+
+export const deleteBrand = (id) => async (dispatch) => {
+  await api.deleteBrand(id);
+  dispatch({ type: "DELETE", payload: id });
 };

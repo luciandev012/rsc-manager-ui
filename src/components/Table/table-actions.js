@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { useDispatch } from "react-redux/es/exports";
 import { updateBrand } from "actions/brand";
+import { deleteBrand } from "actions/brand";
 
 export function TableEditButton({ data }) {
   // validation
@@ -26,16 +27,7 @@ export function TableEditButton({ data }) {
     formState: { errors },
   } = useForm();
   //console.log(data);
-  const onSubmit = async () => {
-    let putData = {
-      brandId: data.brandId,
-      brandname: name,
-      disabled: disabled,
-    };
-    dispatch(updateBrand(putData));
-    handleCloseEdit();
-    //dispatch(getAllBrand());
-  };
+
   //console.log(errors);
 
   // edit
@@ -50,6 +42,18 @@ export function TableEditButton({ data }) {
 
   const handleCloseEdit = () => {
     setOpenDialogEdit(false);
+  };
+
+  const onSubmit = async () => {
+    let putData = {
+      brandId: data.brandId,
+      brandname: name,
+      disabled: disabled,
+    };
+    console.log("putDATA", putData);
+    dispatch(updateBrand(putData));
+    handleCloseEdit();
+    //dispatch(getAllBrand());
   };
 
   return (
@@ -126,9 +130,11 @@ export function TableDeleteButton({ data }) {
   const handleYesDelete = async () => {
     //let path = `https://localhost:5001/api/v1/Product/DeleteBrand?id=${data.brandId}`;
     //await axios.delete(path);
+    dispatch(deleteBrand(data.brandId));
     setOpenDialogDelete(false);
-    window.location.reload();
+    //window.location.reload();
   };
+  const dispatch = useDispatch();
   return (
     <>
       <Tooltip title="Delete" arrow>
