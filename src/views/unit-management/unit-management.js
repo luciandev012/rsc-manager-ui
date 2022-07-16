@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import Table from "./Table";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -25,29 +25,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // validation
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux/es/exports";
-import { getAllBrand } from "actions/brand";
-import { addBrand } from "actions/brand";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUnit, addUnit } from "actions/unit";
+import { FormControlLabel, Checkbox } from "@mui/material";
 
-export default function BrandManagementPage() {
+export default function UnitsManagementPage() {
   // validation
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = async (data) => {
-    dispatch(addBrand(data));
+  const onSubmit = () => {
+    dispatch(
+      addUnit({
+        name: unit.name,
+        disabled: disable,
+      })
+    );
     handleClose();
-    dispatch(getAllBrand());
-    //fetchBrand();
+    dispatch(getAllUnit());
+    window.location.reload;
   };
-  const dispatch = useDispatch();
-  const listBrands = useSelector((state) => state.brand);
-  useEffect(() => {
-    dispatch(getAllBrand());
-    //listBrands = useSelector((state) => state.brand);
-  }, []);
+
   // page
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -73,7 +73,26 @@ export default function BrandManagementPage() {
   const handleClose = () => {
     setOpen(false);
   };
+  const dispatch = useDispatch();
+  const units = useSelector((state) => state.unit);
+  const [unit, setUnit] = useState({
+    name: "",
+    disabled: false,
+  });
+  const [disable, setDisabled] = useState(false);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setUnit((prevUnit) => {
+      return {
+        ...prevUnit,
+        [name]: value,
+      };
+    });
+  };
 
+  useEffect(() => {
+    dispatch(getAllUnit());
+  }, []);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -83,7 +102,7 @@ export default function BrandManagementPage() {
             startIcon={<AddCircleIcon />}
             onClick={handleClickOpen}
           >
-            <span>Add New Brand</span>
+            <span>Add New</span>
           </Button>
         </Stack>
 
@@ -93,26 +112,38 @@ export default function BrandManagementPage() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <form>
-            <DialogTitle>Add new brand</DialogTitle>
+            <DialogTitle>Add New</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
                 margin="dense"
-                id="brandname"
-                label="brandname"
+                id="name"
+                label="Name"
                 type="text"
                 fullWidth
-                name="brandname"
-                {...register("brandname", {
-                  required: "Brand name is required.",
+                name="name"
+                {...register("name", {
+                  required: "Name is required.",
                 })}
-                error={Boolean(errors.brandname)}
-                helperText={errors.brandname?.message}
+                error={Boolean(errors.name)}
+                helperText={errors.name?.message}
                 variant="outlined"
+                value={unit.name}
+                onChange={handleChange}
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={disable}
+                    onChange={() => setDisabled(!disable)}
+                    name="disabled"
+                  />
+                }
+                label="Disable"
               />
             </DialogContent>
             <DialogActions>
-              <Button type="submit">Save</Button>
+              <Button type="submit">Add</Button>
               <Button onClick={handleClose}>Cancel</Button>
             </DialogActions>
           </form>
@@ -123,12 +154,11 @@ export default function BrandManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Brand name", "Actions"]}
-              tableData={listBrands.map((brand) => {
-                // console.log(brand);
-                return [brand.brandId, brand.brandname];
+              tableHead={["ID", "Unit Name", "Actions"]}
+              tableData={units.map((unit) => {
+                return [unit.unitId, unit.name];
               })}
-              editData={listBrands}
+              editData={units}
             />
           </CardBody>
           <TablePagination

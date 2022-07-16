@@ -18,6 +18,7 @@ import StatisticalPage from "views/statistical/statistical";
 import LoginPage from "views/login/login-page";
 import DiscountManagementPage from "views/discount-management/discount-management-list";
 import BrandManagementPage from "views/brand-management/brand-management-list";
+import UnitsManagementPage from "views/unit-management/unit-management";
 
 const dashboardRoutes = [
   {
@@ -74,6 +75,13 @@ const dashboardRoutes = [
     name: "Brand Management",
     icon: LocalGroceryStoreIcon,
     component: BrandManagementPage,
+    layout: "/manager",
+  },
+  {
+    path: "/unit-management",
+    name: "Unit Management",
+    icon: LocalGroceryStoreIcon,
+    component: UnitsManagementPage,
     layout: "/manager",
   },
   {

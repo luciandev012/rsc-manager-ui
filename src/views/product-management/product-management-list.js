@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import Table from "./Table";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -22,20 +22,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import axios from "axios";
 
 // validation
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "actions/product";
 
 export default function ProductManagementPage() {
   // validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
-  console.log(errors);
+  const { handleSubmit } = useForm();
+  const onSubmit = () => console.log(product);
 
   // page
   const [page, setPage] = useState(2);
@@ -63,15 +59,33 @@ export default function ProductManagementPage() {
     setOpen(false);
   };
 
-  const [products, setProducts] = useState([]);
-
+  //const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+  const products = useSelector((state) => state.product);
   useEffect(() => {
-    const fetchProducts = async () => {
-      let res = await axios.get("/Product/GetAllProduct");
-      setProducts(res.data);
-    };
-    fetchProducts();
+    dispatch(getAllProducts());
   }, []);
+  const [product, setProduct] = useState({
+    productName: "",
+    productCode: "",
+    productDescribe: "",
+    productImageURl: "",
+    price: "",
+    quantity: "",
+    discountId: "",
+    subCategoryId: "",
+    unitId: "",
+    categoryId: "",
+  });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setProduct((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: value,
+      };
+    });
+  };
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -91,51 +105,72 @@ export default function ProductManagementPage() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <form>
-            <DialogTitle>Add New</DialogTitle>
+            <DialogTitle>Add Product</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
                 margin="dense"
-                id="name"
-                label="Name"
+                id="productName"
+                label="Product Name"
                 type="text"
-                fullWidth
-                name="name"
-                {...register("name", {
-                  required: "Name is required.",
-                })}
-                error={Boolean(errors.name)}
-                helperText={errors.name?.message}
+                name="productName"
+                value={product.productName}
+                onChange={handleChange}
                 variant="outlined"
               />
-
               <TextField
+                autoFocus
                 margin="dense"
-                id="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                name="email"
-                {...register("email", {
-                  required: "Email is required.",
-                })}
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}
+                id="productCode"
+                label="Product Code"
+                type="text"
+                name="productCode"
+                value={product.productCode}
+                onChange={handleChange}
                 variant="outlined"
               />
-
               <TextField
+                autoFocus
                 margin="dense"
-                id="phone"
-                label="Phone Number"
+                id="productDescribe"
+                label="Product Describe"
                 type="text"
-                fullWidth
-                name="phone"
-                {...register("phone", {
-                  required: "Phone is required.",
-                })}
-                error={Boolean(errors.phone)}
-                helperText={errors.phone?.message}
+                name="productDescribe"
+                value={product.productDescribe}
+                onChange={handleChange}
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="productImageURl"
+                label="Product ImageURl"
+                type="text"
+                name="productImageURl"
+                value={product.productImageURl}
+                onChange={handleChange}
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="price"
+                label="Price"
+                type="text"
+                name="price"
+                value={product.price}
+                onChange={handleChange}
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="quantity"
+                label="Quantity"
+                type="text"
+                name="quantity"
+                value={product.quantity}
+                onChange={handleChange}
                 variant="outlined"
               />
             </DialogContent>
@@ -155,7 +190,7 @@ export default function ProductManagementPage() {
                 "ID",
                 "Product name",
                 "Product code",
-                "Describe",
+                "Image",
                 "Price",
                 "Quantity",
                 "Actions",
@@ -165,13 +200,12 @@ export default function ProductManagementPage() {
                   product.productId,
                   product.productName,
                   product.productCode,
-                  product.productDescribe
-                    ? product.productDescribe.substring(0, 30).concat("...")
-                    : product.productDescribe,
+                  product.productImageURl,
                   product.price,
                   product.quantity,
                 ];
               })}
+              editData={products}
             />
           </CardBody>
           <TablePagination

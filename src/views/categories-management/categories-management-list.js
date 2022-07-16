@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import Table from "./Table";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -22,10 +22,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import axios from "axios";
 
 // validation
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCategories } from "actions/category";
 
 export default function CategoriesManagementPage() {
   // validation
@@ -62,13 +63,10 @@ export default function CategoriesManagementPage() {
   const handleClose = () => {
     setOpen(false);
   };
-  const [cates, setCates] = useState([]);
+  const dispatch = useDispatch();
+  const cates = useSelector((state) => state.category);
   useEffect(() => {
-    const fetchCates = async () => {
-      let cates = await axios.get("/Product/GetAllCategories");
-      setCates(cates.data);
-    };
-    fetchCates();
+    dispatch(getAllCategories());
   }, []);
   return (
     <GridContainer>
