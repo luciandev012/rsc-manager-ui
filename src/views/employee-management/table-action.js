@@ -15,8 +15,8 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
-import { deleteProduct } from "actions/product";
 import AddIcon from "@material-ui/icons/Add";
+import { deleteEmployee } from "actions/employee";
 
 export function TableEditButton({ data }) {
   // validation
@@ -210,7 +210,7 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    dispatch(deleteProduct(data.productId));
+    dispatch(deleteEmployee(data.id));
     setOpenDialogDelete(false);
   };
   const dispatch = useDispatch();
@@ -236,7 +236,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete {data.productName}?
+            Do you want to delete {data.fullname}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

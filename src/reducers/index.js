@@ -4,6 +4,8 @@ import product from "./productReducer";
 import category from "./categoryReducer";
 import unit from "./unitReducer";
 import auth from "./authReducer";
+import employee from "./emloyeeReducer";
+import discount from "./discountReducer";
 
 const allReducers = combineReducers({
   brand,
@@ -11,6 +13,8 @@ const allReducers = combineReducers({
   category,
   unit,
   auth,
+  employee,
+  discount,
 });
 
 export default allReducers;

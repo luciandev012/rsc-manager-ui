@@ -37,6 +37,7 @@ export default function ProductManagementPage() {
     fd.append("files", image);
     fd.append("productName", product.productName);
     fd.append("productCode", product.productCode);
+    fd.append("productDescribe", product.productDescribe);
     fd.append("price", product.price);
     fd.append("quantity", product.quantity);
     fd.append("unitId", 1);
@@ -225,21 +226,6 @@ export default function ProductManagementPage() {
                 >
                   <AddIcon /> Upload photo
                 </Fab>
-                {/* <br />
-                <br />
-                <Fab
-                  color="primary"
-                  size="small"
-                  component="span"
-                  aria-label="add"
-                >
-                  <AddIcon />
-                </Fab>
-                <br />
-                <br />
-                <Button color="secondary" variant="contained" component="span">
-                  Upload button
-                </Button>{" "} */}
               </label>
             </DialogContent>
             <DialogActions>

@@ -14,25 +14,58 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
-import { Checkbox, FormControlLabel } from "@mui/material";
 import { useDispatch } from "react-redux/es/exports";
-import { updateUnit } from "actions/unit";
-import { deleteUnit } from "actions/unit";
-//import { getAllUnit } from "actions/unit";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { deleteDiscount } from "actions/discount";
+import { updateDiscount } from "actions/discount";
 
 export function TableEditButton({ data }) {
   // validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit } = useForm();
+  //console.log(data);
+  const onSubmit = () => {
+    const data = {
+      discountName: disc.discountName,
+      discountPercent: disc.discountPercent,
+      dateCreate: formatDate(dateCreate),
+      dateEnd: formatDate(dateEnd),
+    };
+    dispatch(updateDiscount(data));
+    handleCloseEdit();
+  };
+  const formatDate = (date) => {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  };
+  //console.log(errors);
+  const dispatch = useDispatch();
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [name, setName] = React.useState(data.name);
-  const [disabled, setDisabled] = React.useState(data.disabled);
-  const dispatch = useDispatch();
+  const [disc, setDisc] = React.useState({
+    discountName: data.discountName,
+    discountPercent: data.discountPercent,
+  });
+  const [dateCreate, setDateCreate] = React.useState(data.dateCreate);
+  const [dateEnd, setDateEnd] = React.useState(data.dateEnd);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setDisc((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: value,
+      };
+    });
+  };
+  //const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -40,16 +73,6 @@ export function TableEditButton({ data }) {
 
   const handleCloseEdit = () => {
     setOpenDialogEdit(false);
-  };
-
-  const onSubmit = async () => {
-    let putData = {
-      unitId: data.unitId,
-      name: name,
-      disabled: disabled,
-    };
-    dispatch(updateUnit(putData));
-    handleCloseEdit();
   };
 
   return (
@@ -74,32 +97,45 @@ export function TableEditButton({ data }) {
           <DialogTitle>Edit</DialogTitle>
           <DialogContent>
             <TextField
-              autoFocus
               margin="dense"
-              id="name"
-              label="Name"
+              id="discountName"
+              label="Discount name"
               type="text"
-              name="name"
-              {...register("name", {
-                required: "Name is required.",
-              })}
-              error={Boolean(errors.name)}
-              helperText={errors.name?.message}
-              onChange={(val) => setName(val.target.value)}
-              value={name}
+              name="discountName"
+              value={disc.discountName}
+              onChange={handleChange}
               variant="outlined"
-              fullWidth
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={disabled}
-                  onChange={() => setDisabled(!disabled)}
-                  name="disabled"
-                />
-              }
-              label="Disable"
+            <TextField
+              margin="dense"
+              id="discountPercent"
+              label="Percent"
+              type="text"
+              name="discountPercent"
+              value={disc.discountPercent}
+              onChange={handleChange}
+              variant="outlined"
             />
+            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Create Date"
+                value={dateCreate}
+                onChange={(newValue) => {
+                  setDateCreate(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="End Date"
+                value={dateEnd}
+                onChange={(newValue) => {
+                  setDateEnd(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>
@@ -123,9 +159,8 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    dispatch(deleteUnit(data.unitId));
+    dispatch(deleteDiscount(data.discountId));
     setOpenDialogDelete(false);
-    //dispatch(getAllUnit());
   };
   const dispatch = useDispatch();
   return (
@@ -150,7 +185,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete {data.name}?
+            Do you want to delete {data.discountName}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

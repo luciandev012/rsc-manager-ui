@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import Table from "./Table";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -12,7 +12,9 @@ import CardBody from "components/Card/CardBody.js";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // paging
 import TablePagination from "@mui/material/TablePagination";
 
@@ -25,17 +27,34 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // validation
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDiscount } from "actions/discount";
+import { addDiscount } from "actions/discount";
 
 export default function DiscountManagementPage() {
   // validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
-  console.log(errors);
+  const { handleSubmit } = useForm();
+  const onSubmit = () => {
+    const data = {
+      discountName: disc.discountName,
+      discountPercent: disc.discountPercent,
+      dateCreate: formatDate(dateCreate),
+      dateEnd: formatDate(dateEnd),
+    };
+    dispatch(addDiscount(data));
+    handleClose();
+  };
+  const formatDate = (date) => {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  };
   // page
   const [page, setPage] = useState(2);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -61,7 +80,26 @@ export default function DiscountManagementPage() {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const dispatch = useDispatch();
+  const discounts = useSelector((state) => state.discount);
+  const [disc, setDisc] = useState({
+    discountName: "",
+    discountPercent: "",
+  });
+  const [dateCreate, setDateCreate] = useState(new Date());
+  const [dateEnd, setDateEnd] = useState(new Date());
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setDisc((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: value,
+      };
+    });
+  };
+  useEffect(() => {
+    dispatch(getAllDiscount());
+  }, []);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -84,50 +122,51 @@ export default function DiscountManagementPage() {
             <DialogTitle>Add New</DialogTitle>
             <DialogContent>
               <TextField
-                autoFocus
                 margin="dense"
-                id="name"
-                label="Name"
+                id="discountName"
+                label="Discount name"
                 type="text"
-                fullWidth
-                name="name"
-                {...register("name", {
-                  required: "Name is required.",
-                })}
-                error={Boolean(errors.name)}
-                helperText={errors.name?.message}
+                name="discountName"
+                value={disc.discountName}
+                onChange={handleChange}
                 variant="outlined"
               />
-
               <TextField
                 margin="dense"
-                id="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                name="email"
-                {...register("email", {
-                  required: "Email is required.",
-                })}
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}
-                variant="outlined"
-              />
-
-              <TextField
-                margin="dense"
-                id="phone"
-                label="Phone Number"
+                id="discountPercent"
+                label="Percent"
                 type="text"
-                fullWidth
-                name="phone"
-                {...register("phone", {
-                  required: "Phone is required.",
-                })}
-                error={Boolean(errors.phone)}
-                helperText={errors.phone?.message}
+                name="discountPercent"
+                value={disc.discountPercent}
+                onChange={handleChange}
                 variant="outlined"
               />
+              <LocalizationProvider
+                className="date"
+                dateAdapter={AdapterDateFns}
+              >
+                <DatePicker
+                  label="Create Date"
+                  value={dateCreate}
+                  onChange={(newValue) => {
+                    setDateCreate(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+              <LocalizationProvider
+                className="date"
+                dateAdapter={AdapterDateFns}
+              >
+                <DatePicker
+                  label="End Date"
+                  value={dateEnd}
+                  onChange={(newValue) => {
+                    setDateEnd(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
             </DialogContent>
             <DialogActions>
               <Button type="submit">Save</Button>
@@ -141,21 +180,14 @@ export default function DiscountManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={[
-                "ID",
-                "Name",
-                "Email Address",
-                "Phone Number",
-                "Actions",
-              ]}
-              tableData={[
-                [
-                  "1",
-                  "Nguyen Tuan Bang",
-                  "bangntce130421@fpt.edu.vn",
-                  "0366928662",
-                ],
-              ]}
+              tableHead={["ID", "Name", "End date", "Percent", "Actions"]}
+              tableData={discounts.map((discount) => [
+                discount.discountId,
+                discount.discountName,
+                discount.dateEnd,
+                discount.discountPercent,
+              ])}
+              editData={discounts}
             />
           </CardBody>
           <TablePagination
