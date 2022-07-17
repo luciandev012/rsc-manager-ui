@@ -1,5 +1,3 @@
-const { default: axios } = require("axios");
-
-const API = axios.create({ baseURL: "https://localhost:5001/api/v1/" });
+import API from "../helper/axios";
 
 export const getAllCates = () => API.get("/Product/GetAllCategories");

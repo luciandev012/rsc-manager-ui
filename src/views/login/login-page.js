@@ -24,6 +24,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardFooter from "components/Card/CardFooter.js";
 
 import LoginPageStyle from "assets/jss/material-dashboard-react/views/loginPageStyle.js";
+import axiosIntance from "../../helper/axios";
 
 // const { REACT_APP_SERVER_URL } = process.env;
 // validation
@@ -34,46 +35,31 @@ class LoginPage extends React.Component {
     this.state = {
       checked: [],
       errors: {},
+      username: "",
+      password: "",
     };
   }
-
-  //   login = async (e) => {
-  //     e.preventDefault();
-
-  //     const { history } = this.props;
-
-  //     const fields = ["username", "password"];
-  //     const formElements = e.target.elements;
-
-  //     const formValues = fields
-  //       .map((field) => ({
-  //         [field]: formElements.namedItem(field).value,
-  //       }))
-  //       .reduce((current, next) => ({ ...current, ...next }));
-
-  //     let loginRequest;
-  //     try {
-  //       loginRequest = await axios.post(
-  //         `http://${REACT_APP_SERVER_URL}/login`,
-  //         {
-  //           ...formValues,
-  //         },
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       );
-  //     } catch ({ response }) {
-  //       loginRequest = response;
-  //     }
-  //     const { data: loginRequestData } = loginRequest;
-  //     if (loginRequestData.success) {
-  //       return history.push("/dashboard");
-  //     }
-
-  //     this.setState({
-  //       errors: loginRequestData.messages && loginRequestData.messages.errors,
-  //     });
-  //   };
+  //dispatch = useDispatch();
+  login = async (e) => {
+    e.preventDefault();
+    const fields = ["username", "password"];
+    const formElements = e.target.elements;
+    const { history } = this.props;
+    const formValues = fields
+      .map((field) => ({
+        [field]: formElements.namedItem(field).value,
+      }))
+      .reduce((current, next) => ({ ...current, ...next }));
+    const { data, status } = await axiosIntance.post(
+      "/Admin/Login",
+      formValues
+    );
+    if (status == 200) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.username);
+      return history.push("/dashboard");
+    }
+  };
   handleToggle = (value) => {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(value);
@@ -89,6 +75,20 @@ class LoginPage extends React.Component {
       checked: newChecked,
     });
   };
+  usernameHandleChange = (event) => {
+    console.log(event.target);
+    let username = event.target.value;
+    this.setState({
+      username: username,
+    });
+  };
+  passwordHandleChange = (event) => {
+    let password = event.target.value;
+    this.setState({
+      password: password,
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const { errors } = this.state;
@@ -151,6 +151,8 @@ class LoginPage extends React.Component {
                         </InputAdornment>
                       ),
                     }}
+                    onChange={this.usernameHandleChange}
+                    value={this.state.username}
                   />
                   <CustomInput
                     labelText="Password"
@@ -171,6 +173,8 @@ class LoginPage extends React.Component {
                         </InputAdornment>
                       ),
                     }}
+                    onChange={this.passwordHandleChange}
+                    value={this.state.password}
                   />
                   <FormControlLabel
                     classes={{

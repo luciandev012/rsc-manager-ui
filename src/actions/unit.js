@@ -10,10 +10,12 @@ export const getAllUnit = () => async (dispatch) => {
 };
 
 export const addUnit = (unit) => async (dispatch) => {
-  console.log("unit", unit);
-  const data = await api.createUnit(unit);
-  console.log("data", data);
-  dispatch({ type: "CREATE", payload: data });
+  //console.log("unit", unit);
+  const { status } = await api.createUnit(unit);
+  //console.log("data", data);
+  if (status == 200) {
+    dispatch({ type: "CREATE", payload: unit });
+  }
 };
 
 export const updateUnit = (unit) => async (dispatch) => {

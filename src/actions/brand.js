@@ -10,8 +10,10 @@ export const getAllBrand = () => async (dispatch) => {
 };
 
 export const addBrand = (brand) => async (dispatch) => {
-  const data = await api.createBrand(brand);
-  dispatch({ type: "CREATE", payload: data });
+  const { status } = await api.createBrand(brand);
+  if (status == 200) {
+    dispatch({ type: "CREATE", payload: brand });
+  }
 };
 
 export const updateBrand = (brand) => async (dispatch) => {
