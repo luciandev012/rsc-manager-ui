@@ -12,7 +12,7 @@ import CardBody from "components/Card/CardBody.js";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-
+import AddIcon from "@material-ui/icons/Add";
 // paging
 import TablePagination from "@mui/material/TablePagination";
 
@@ -22,16 +22,29 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import { Fab } from "@material-ui/core";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "actions/product";
+import { addProduct } from "actions/product";
 
 export default function ProductManagementPage() {
   // validation
   const { handleSubmit } = useForm();
-  const onSubmit = () => console.log(product);
+  const onSubmit = () => {
+    const fd = new FormData();
+    fd.append("files", image);
+    fd.append("productName", product.productName);
+    fd.append("productCode", product.productCode);
+    fd.append("price", product.price);
+    fd.append("quantity", product.quantity);
+    fd.append("unitId", 1);
+    fd.append("subCategoryId", 1);
+    fd.append("productId", product.productId);
+    dispatch(addProduct(fd));
+    handleClose();
+  };
 
   // page
   const [page, setPage] = useState(2);
@@ -66,10 +79,10 @@ export default function ProductManagementPage() {
     dispatch(getAllProducts());
   }, []);
   const [product, setProduct] = useState({
+    productId: "",
     productName: "",
     productCode: "",
     productDescribe: "",
-    productImageURl: "",
     price: "",
     quantity: "",
     discountId: "",
@@ -77,6 +90,10 @@ export default function ProductManagementPage() {
     unitId: "",
     categoryId: "",
   });
+  const [image, setImage] = useState("");
+  const handleImage = (e) => {
+    setImage(e.target.files[0]);
+  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     setProduct((prevValue) => {
@@ -110,6 +127,17 @@ export default function ProductManagementPage() {
               <TextField
                 autoFocus
                 margin="dense"
+                id="productId"
+                label="Product Id"
+                type="text"
+                name="productId"
+                value={product.productId}
+                onChange={handleChange}
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
                 id="productName"
                 label="Product Name"
                 type="text"
@@ -119,7 +147,6 @@ export default function ProductManagementPage() {
                 variant="outlined"
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="productCode"
                 label="Product Code"
@@ -130,7 +157,6 @@ export default function ProductManagementPage() {
                 variant="outlined"
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="productDescribe"
                 label="Product Describe"
@@ -141,18 +167,6 @@ export default function ProductManagementPage() {
                 variant="outlined"
               />
               <TextField
-                autoFocus
-                margin="dense"
-                id="productImageURl"
-                label="Product ImageURl"
-                type="text"
-                name="productImageURl"
-                value={product.productImageURl}
-                onChange={handleChange}
-                variant="outlined"
-              />
-              <TextField
-                autoFocus
                 margin="dense"
                 id="price"
                 label="Price"
@@ -163,7 +177,6 @@ export default function ProductManagementPage() {
                 variant="outlined"
               />
               <TextField
-                autoFocus
                 margin="dense"
                 id="quantity"
                 label="Quantity"
@@ -173,6 +186,61 @@ export default function ProductManagementPage() {
                 onChange={handleChange}
                 variant="outlined"
               />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="unitId"
+                label="Unit Id"
+                type="text"
+                name="unitId"
+                value={product.unitId}
+                onChange={handleChange}
+                variant="outlined"
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                id="subCategoryId"
+                label="Sub Category Id"
+                type="text"
+                name="subCategoryId"
+                value={product.subCategoryId}
+                onChange={handleChange}
+                variant="outlined"
+              />
+              <label htmlFor="upload-photo">
+                <input
+                  style={{ display: "none" }}
+                  id="upload-photo"
+                  name="upload-photo"
+                  type="file"
+                  onChange={handleImage}
+                />
+                <Fab
+                  color="secondary"
+                  size="small"
+                  component="span"
+                  aria-label="add"
+                  variant="extended"
+                >
+                  <AddIcon /> Upload photo
+                </Fab>
+                {/* <br />
+                <br />
+                <Fab
+                  color="primary"
+                  size="small"
+                  component="span"
+                  aria-label="add"
+                >
+                  <AddIcon />
+                </Fab>
+                <br />
+                <br />
+                <Button color="secondary" variant="contained" component="span">
+                  Upload button
+                </Button>{" "} */}
+              </label>
             </DialogContent>
             <DialogActions>
               <Button type="submit">Save</Button>
