@@ -6,6 +6,7 @@ import unit from "./unitReducer";
 import auth from "./authReducer";
 import employee from "./emloyeeReducer";
 import discount from "./discountReducer";
+import order from "./orderReducer";
 
 const allReducers = combineReducers({
   brand,
@@ -15,6 +16,7 @@ const allReducers = combineReducers({
   auth,
   employee,
   discount,
+  order,
 });
 
 export default allReducers;

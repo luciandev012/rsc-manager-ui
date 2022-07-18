@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import Table from "./Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -25,6 +25,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 
 // validation
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllOrder } from "actions/order.js";
 
 export default function OrderManagementPage() {
   // validation
@@ -61,7 +63,11 @@ export default function OrderManagementPage() {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const dispatch = useDispatch();
+  const orders = useSelector((state) => state.order);
+  useEffect(() => {
+    dispatch(getAllOrder());
+  }, []);
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -143,19 +149,18 @@ export default function OrderManagementPage() {
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
-                "Name",
-                "Email Address",
-                "Phone Number",
+                "Date created",
+                "Customer",
+                "Total price",
                 "Actions",
               ]}
-              tableData={[
-                [
-                  "1",
-                  "Nguyen Tuan Bang",
-                  "bangntce130421@fpt.edu.vn",
-                  "0366928662",
-                ],
-              ]}
+              tableData={orders.map((order) => [
+                order.orderId,
+                order.dateCreate,
+                order.customer,
+                order.totalPrice,
+              ])}
+              editData={orders}
             />
           </CardBody>
           <TablePagination
