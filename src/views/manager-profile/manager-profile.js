@@ -11,9 +11,8 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
+import { Avatar } from "@material-ui/core";
 // import CardFooter from "components/Card/CardFooter.js";
-
-import avatar from "assets/img/profile.jpg";
 
 const styles = {
   cardCategoryWhite: {
@@ -35,7 +34,7 @@ const styles = {
 };
 
 const useStyles = makeStyles(styles);
-
+const user = JSON.parse(window.localStorage.getItem("user"));
 export default function ManagerProfilePage() {
   const classes = useStyles();
   return (
@@ -50,7 +49,7 @@ export default function ManagerProfilePage() {
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
-                    labelText="Nguyen Tuan Bang"
+                    labelText={user.fullname}
                     id="company-disabled"
                     formControlProps={{
                       fullWidth: true,
@@ -62,7 +61,7 @@ export default function ManagerProfilePage() {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
-                    labelText="bangntce130421@fpt.edu.vn"
+                    labelText={user.email}
                     id="email"
                     formControlProps={{
                       fullWidth: true,
@@ -76,7 +75,7 @@ export default function ManagerProfilePage() {
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
-                    labelText="0366928662"
+                    labelText={user.phonenumber}
                     id="phone"
                     formControlProps={{
                       fullWidth: true,
@@ -125,16 +124,12 @@ export default function ManagerProfilePage() {
         <GridItem xs={12} sm={12} md={4}>
           <Card profile>
             <CardAvatar profile>
-              <p>
-                <img src={avatar} alt="..." />
-              </p>
+              <Avatar src={user.avatar} />
             </CardAvatar>
             <CardBody profile>
               <h6 className={classes.cardCategory}>Manager</h6>
-              <h4 className={classes.cardTitle}>Nguyen Tuan Bang</h4>
-              <p className={classes.description}>
-                Email: bangntce130421@fpt.edu.vn
-              </p>
+              <h4 className={classes.cardTitle}>{user.fullname}</h4>
+              <p className={classes.description}>Email: {user.email}</p>
               {/* <Button color="primary" round>
                 Follow
               </Button> */}

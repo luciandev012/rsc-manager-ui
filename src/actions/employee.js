@@ -1,7 +1,8 @@
 import * as api from "../apis/employee";
+import * as staff from "../apis/staff";
 
 export const getAllEmployee = () => async (dispatch) => {
-  const { data } = await api.getAllEmployee();
+  const { data } = await staff.getALLStaff();
   dispatch({ type: "GETALL", payload: data });
 };
 
@@ -9,7 +10,7 @@ export const addEmployee = (form) => async (dispatch) => {
   const { data, status } = await api.addEmployee(form);
   console.log(data);
   if (status == 200) {
-    const { data } = await api.getAllEmployee();
+    const { data } = await staff.getALLStaff();
     dispatch({ type: "GETALL", payload: data });
   }
 };

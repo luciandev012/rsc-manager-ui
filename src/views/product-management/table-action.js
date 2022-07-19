@@ -148,7 +148,6 @@ export function TableEditButton({ data }) {
               variant="outlined"
             />
             <TextField
-              autoFocus
               margin="dense"
               id="unitId"
               label="Unit Id"
@@ -159,7 +158,6 @@ export function TableEditButton({ data }) {
               variant="outlined"
             />
             <TextField
-              autoFocus
               margin="dense"
               id="subCategoryId"
               label="Sub Category Id"

@@ -1,8 +1,6 @@
 import API from "../helper/axios";
 
-export const getAllEmployee = () => API.delete("/Admin/GetManagerList");
-
-export const addEmployee = (form) => API.post("/Admin/AddManager", form);
+export const addEmployee = (form) => API.post("/Manager/AddStaff", form);
 
 export const deleteEmployee = (id) =>
-  API.delete(`/Admin/DeleteManager?managerId=${id}`);
+  API.delete(`/Manager/DeleteStaff?staffId=${id}`);

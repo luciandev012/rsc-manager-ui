@@ -240,38 +240,6 @@ export default function EmployeeManagementPage() {
                 }
                 label="Gender: tick for Male"
               />
-              {/* <TextField
-                margin="dense"
-                id="quantity"
-                label="Quantity"
-                type="text"
-                name="quantity"
-                value={product.quantity}
-                onChange={handleChange}
-                variant="outlined"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="unitId"
-                label="Unit Id"
-                type="text"
-                name="unitId"
-                value={product.unitId}
-                onChange={handleChange}
-                variant="outlined"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                id="subCategoryId"
-                label="Sub Category Id"
-                type="text"
-                name="subCategoryId"
-                value={product.subCategoryId}
-                onChange={handleChange}
-                variant="outlined"
-              /> */}
               <label htmlFor="upload-photo">
                 <input
                   style={{ display: "none" }}
@@ -309,6 +277,7 @@ export default function EmployeeManagementPage() {
                 "Phone Number",
                 "Date of birth",
                 "Personal Id",
+                "Address",
                 "Avatar",
                 "Actions",
               ]}
@@ -318,6 +287,7 @@ export default function EmployeeManagementPage() {
                 employee.phonenumber,
                 employee.dateOfBirth,
                 employee.personalId,
+                employee.address,
                 employee.urlAvatar,
               ])}
               editData={employees}

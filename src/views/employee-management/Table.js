@@ -53,7 +53,7 @@ export default function CustomTable(props) {
                 // Attribute
                 <TableRow key={key} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
-                    if (key != 5) {
+                    if (key != 6) {
                       return (
                         <TableCell className={classes.tableCell} key={key}>
                           {prop}

@@ -128,17 +128,6 @@ export default function ProductManagementPage() {
               <TextField
                 autoFocus
                 margin="dense"
-                id="productId"
-                label="Product Id"
-                type="text"
-                name="productId"
-                value={product.productId}
-                onChange={handleChange}
-                variant="outlined"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
                 id="productName"
                 label="Product Name"
                 type="text"

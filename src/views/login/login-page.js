@@ -55,7 +55,10 @@ class LoginPage extends React.Component {
       formValues
     );
     if (status == 200) {
-      localStorage.setItem("token", data.token);
+      const { token, ...rest } = data;
+      localStorage.clear();
+      localStorage.setItem("user", JSON.stringify(rest));
+      localStorage.setItem("token", token);
       return history.push("/dashboard");
     }
   };
