@@ -6,3 +6,5 @@ export const addProduct = (form) => API.post("/Product/AddProduct", form);
 
 export const deleteProduct = (id) =>
   API.delete(`/Product/DeleteProduct?id=${id}`);
+
+export const updateProduct = (form) => API.post("/Product/UpdateProduct", form);

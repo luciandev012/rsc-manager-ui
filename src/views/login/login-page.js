@@ -51,12 +51,11 @@ class LoginPage extends React.Component {
       }))
       .reduce((current, next) => ({ ...current, ...next }));
     const { data, status } = await axiosIntance.post(
-      "/Admin/Login",
+      `/Account/Login?namePage=managerpage`,
       formValues
     );
     if (status == 200) {
       localStorage.setItem("token", data.token);
-      localStorage.setItem("username", data.username);
       return history.push("/dashboard");
     }
   };

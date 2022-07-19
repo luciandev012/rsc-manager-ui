@@ -15,7 +15,7 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
-import { deleteProduct } from "actions/product";
+import { deleteProduct, updateProduct } from "actions/product";
 import AddIcon from "@material-ui/icons/Add";
 
 export function TableEditButton({ data }) {
@@ -51,7 +51,7 @@ export function TableEditButton({ data }) {
       };
     });
   };
-  //const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -71,7 +71,7 @@ export function TableEditButton({ data }) {
     fd.append("unitId", 1);
     fd.append("subCategoryId", 1);
     fd.append("productId", data.productId);
-    //dispatch(updateProduct(fd));
+    dispatch(updateProduct(fd));
     handleCloseEdit();
   };
 
