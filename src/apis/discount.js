@@ -8,5 +8,5 @@ export const addDiscount = (discount) =>
 export const deleteDiscount = (id) =>
   axios.delete(`/Product/DeleteDiscount?id=${id}`);
 
-export const editDiscount = (discount) =>
+export const updateDiscount = (discount) =>
   axios.post("/Product/UpdateDiscount", discount);

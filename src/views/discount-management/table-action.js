@@ -26,13 +26,14 @@ export function TableEditButton({ data }) {
   const { handleSubmit } = useForm();
   //console.log(data);
   const onSubmit = () => {
-    const data = {
+    const putData = {
+      discountId: data.discountId,
       discountName: disc.discountName,
       discountPercent: disc.discountPercent,
       dateCreate: formatDate(dateCreate),
       dateEnd: formatDate(dateEnd),
     };
-    dispatch(updateDiscount(data));
+    dispatch(updateDiscount(putData));
     handleCloseEdit();
   };
   const formatDate = (date) => {

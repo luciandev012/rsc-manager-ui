@@ -20,6 +20,6 @@ export const deleteDiscount = (id) => async (dispatch) => {
 
 export const updateDiscount = (discount) => async (dispatch) => {
   console.log(discount);
-  await api.editDiscount(discount);
+  await api.updateDiscount(discount);
   dispatch({ type: "UPDATE", payload: discount });
 };
