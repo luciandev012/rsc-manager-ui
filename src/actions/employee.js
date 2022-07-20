@@ -19,3 +19,10 @@ export const deleteEmployee = (id) => async (dispatch) => {
   await api.deleteEmployee(id);
   dispatch({ type: "DELETE", payload: id });
 };
+
+export const updateEmployee = (form) => async (dispatch) => {
+  const res = await api.updateEmployee(form);
+  console.log(res);
+  const { data } = await staff.getALLStaff();
+  dispatch({ type: "GETALL", payload: data });
+};

@@ -18,8 +18,8 @@ import { useDispatch } from "react-redux/es/exports";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { deleteDiscount } from "actions/discount";
 import { updateDiscount } from "actions/discount";
+import { deleteOrder } from "actions/order";
 
 export function TableEditButton({ data }) {
   // validation
@@ -159,7 +159,7 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    dispatch(deleteDiscount(data.discountId));
+    dispatch(deleteOrder(data.orderId));
     setOpenDialogDelete(false);
   };
   const dispatch = useDispatch();
@@ -185,7 +185,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete {data.discountName}?
+            Do you want to delete this order?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

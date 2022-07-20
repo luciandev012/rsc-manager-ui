@@ -3,6 +3,9 @@ const order = (state = [], action) => {
     case "GETALL": {
       return action.payload;
     }
+    case "DELETE": {
+      return state.filter((order) => order.orderId != action.payload);
+    }
     default:
       return state;
   }

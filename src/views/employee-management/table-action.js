@@ -17,6 +17,11 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
 import AddIcon from "@material-ui/icons/Add";
 import { deleteEmployee } from "actions/employee";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import { updateEmployee } from "actions/employee";
 
 export function TableEditButton({ data }) {
   // validation
@@ -27,31 +32,23 @@ export function TableEditButton({ data }) {
 
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [product, setProduct] = React.useState({
-    productName: data.productName,
-    productCode: data.productCode,
-    productDescribe: data.productDescribe,
-    price: data.price,
-    quantity: data.quantity,
-    discountId: data.discountId,
-    subCategoryId: data.subCategoryId,
-    unitId: data.unitId,
-    categoryId: data.categoryId,
-  });
+  const dispatch = useDispatch();
+  const [employ, setEmploy] = React.useState(data);
+  const [dateOfBirth, setDateOfBirth] = React.useState(new Date());
   const [image, setImage] = React.useState("");
   const handleImage = (e) => {
     setImage(e.target.files[0]);
   };
+  const [disabled, setDisabled] = React.useState(false);
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setProduct((prevValue) => {
+    setEmploy((prevValue) => {
       return {
         ...prevValue,
         [name]: value,
       };
     });
   };
-  //const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -61,18 +58,32 @@ export function TableEditButton({ data }) {
     setOpenDialogEdit(false);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = () => {
     const fd = new FormData();
-    fd.append("files", image);
-    fd.append("productName", product.productName);
-    fd.append("productCode", product.productCode);
-    fd.append("price", product.price);
-    fd.append("quantity", product.quantity);
-    fd.append("unitId", 1);
-    fd.append("subCategoryId", 1);
-    fd.append("productId", data.productId);
-    //dispatch(updateProduct(fd));
+    fd.append("fileAvatar", image);
+    fd.append("id", employ.id);
+    fd.append("dateOfBirth", formatDate(dateOfBirth));
+    fd.append("fullname", employ.fullname);
+    fd.append("address", employ.address);
+    fd.append("phonenumber", employ.phonenumber);
+    fd.append("email", employ.email);
+    fd.append("cwtId", 1);
+    fd.append("personalId", employ.personalId);
+    fd.append("gender", disabled);
+    dispatch(updateEmployee(fd));
     handleCloseEdit();
+  };
+
+  const formatDate = (date) => {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
   };
 
   return (
@@ -99,75 +110,74 @@ export function TableEditButton({ data }) {
             <TextField
               autoFocus
               margin="dense"
-              id="productName"
-              label="Product Name"
+              id="fullname"
+              label="Full name"
               type="text"
-              name="productName"
-              value={product.productName}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <TextField
-              margin="dense"
-              id="productCode"
-              label="Product Code"
-              type="text"
-              name="productCode"
-              value={product.productCode}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <TextField
-              margin="dense"
-              id="productDescribe"
-              label="Product Describe"
-              type="text"
-              name="productDescribe"
-              value={product.productDescribe}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <TextField
-              margin="dense"
-              id="price"
-              label="Price"
-              type="text"
-              name="price"
-              value={product.price}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <TextField
-              margin="dense"
-              id="quantity"
-              label="Quantity"
-              type="text"
-              name="quantity"
-              value={product.quantity}
+              name="fullname"
+              value={employ.fullname}
               onChange={handleChange}
               variant="outlined"
             />
             <TextField
               autoFocus
               margin="dense"
-              id="unitId"
-              label="Unit Id"
+              id="email"
+              label="Email"
               type="text"
-              name="unitId"
-              value={product.unitId}
+              name="email"
+              value={employ.email}
               onChange={handleChange}
               variant="outlined"
             />
             <TextField
-              autoFocus
               margin="dense"
-              id="subCategoryId"
-              label="Sub Category Id"
+              id="address"
+              label="Address"
               type="text"
-              name="subCategoryId"
-              value={product.subCategoryId}
+              name="address"
+              value={employ.address}
               onChange={handleChange}
               variant="outlined"
+            />
+            <TextField
+              margin="dense"
+              id="personalId"
+              label="Personal Id"
+              type="text"
+              name="personalId"
+              value={employ.personalId}
+              onChange={handleChange}
+              variant="outlined"
+            />
+            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Date of birth"
+                value={dateOfBirth}
+                onChange={(newValue) => {
+                  setDateOfBirth(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+            <TextField
+              margin="dense"
+              id="phonenumber"
+              label="Phone number"
+              type="text"
+              name="phonenumber"
+              value={employ.phonenumber}
+              onChange={handleChange}
+              variant="outlined"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={disabled}
+                  onChange={() => setDisabled(!disabled)}
+                  name="disabled"
+                />
+              }
+              label="Gender: tick for Male"
             />
             <label htmlFor="upload-photo">
               <input
