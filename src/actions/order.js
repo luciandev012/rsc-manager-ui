@@ -10,3 +10,10 @@ export const deleteOrder = (id) => async (dispatch) => {
   console.log(data);
   dispatch({ type: "DELETE", payload: id });
 };
+
+export const updateOrder = (order) => async (dispatch) => {
+  console.log(order);
+  await api.updateOrder(order);
+  const { data } = await api.getAllOrder();
+  dispatch({ type: "GETALL", payload: data });
+};

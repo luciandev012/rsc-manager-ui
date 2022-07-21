@@ -86,39 +86,7 @@ export default function ManagerProfilePage() {
                   />
                 </GridItem>
               </GridContainer>
-              {/* <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="City"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Country"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer> */}
             </CardBody>
-            {/* <CardFooter>
-              <Button color="primary">Update Profile</Button>
-            </CardFooter> */}
           </Card>
         </GridItem>
         <GridItem xs={12} sm={12} md={4}>

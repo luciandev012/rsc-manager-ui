@@ -15,55 +15,39 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { updateDiscount } from "actions/discount";
-import { deleteOrder } from "actions/order";
-
+import { deleteOrder, updateOrder } from "actions/order";
+import API from "../../helper/axios";
 export function TableEditButton({ data }) {
   // validation
   const { handleSubmit } = useForm();
   //console.log(data);
-  const onSubmit = () => {
-    const data = {
-      discountName: disc.discountName,
-      discountPercent: disc.discountPercent,
-      dateCreate: formatDate(dateCreate),
-      dateEnd: formatDate(dateEnd),
-    };
-    dispatch(updateDiscount(data));
+  const onSubmit = async () => {
+    dispatch(
+      updateOrder({
+        orderId: data.orderId,
+        staffId: data.staffId,
+        custormerId: data.custormerId,
+        dateCreate: data.dateCreate,
+        paymentMethodId: data.paymentMethodId,
+        status: status,
+        totalPrice: data.totalPrice,
+        orderdetails: (await getOrderByCustomerId(data.custormerId)).data[0]
+          .orderdetails,
+      })
+    );
     handleCloseEdit();
   };
-  const formatDate = (date) => {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
-  };
+  const getOrderByCustomerId = (id) =>
+    API.get(`/Order/GetAllOrderIncludeOderDetailbyCustomerId?id=${id}`);
   //console.log(errors);
   const dispatch = useDispatch();
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [disc, setDisc] = React.useState({
-    discountName: data.discountName,
-    discountPercent: data.discountPercent,
-  });
-  const [dateCreate, setDateCreate] = React.useState(data.dateCreate);
-  const [dateEnd, setDateEnd] = React.useState(data.dateEnd);
+  const [status, setStatus] = React.useState(data.status);
+
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setDisc((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
+    const { value } = event.target;
+    setStatus(value);
   };
   //const dispatch = useDispatch();
 
@@ -98,44 +82,14 @@ export function TableEditButton({ data }) {
           <DialogContent>
             <TextField
               margin="dense"
-              id="discountName"
-              label="Discount name"
+              id="status"
+              label="Status"
               type="text"
-              name="discountName"
-              value={disc.discountName}
+              name="status"
+              value={status}
               onChange={handleChange}
               variant="outlined"
             />
-            <TextField
-              margin="dense"
-              id="discountPercent"
-              label="Percent"
-              type="text"
-              name="discountPercent"
-              value={disc.discountPercent}
-              onChange={handleChange}
-              variant="outlined"
-            />
-            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Create Date"
-                value={dateCreate}
-                onChange={(newValue) => {
-                  setDateCreate(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="End Date"
-                value={dateEnd}
-                onChange={(newValue) => {
-                  setDateEnd(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>
