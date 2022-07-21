@@ -285,7 +285,7 @@ export default function EmployeeManagementPage() {
                 employee.fullname,
                 employee.email,
                 employee.phonenumber,
-                employee.dateOfBirth,
+                employee.dateofbirth,
                 employee.personalId,
                 employee.address,
                 employee.urlAvatar,

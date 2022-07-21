@@ -80,7 +80,7 @@ export default function ProductManagementPage() {
     dispatch(getAllProducts());
   }, []);
   const [product, setProduct] = useState({
-    productId: "",
+    productId: 1,
     productName: "",
     productCode: "",
     productDescribe: "",
