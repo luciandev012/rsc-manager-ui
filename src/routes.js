@@ -1,5 +1,4 @@
 // @material-ui/icons
-import Dashboard from "@material-ui/icons/Dashboard";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
@@ -8,7 +7,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import LoginIcon from "@mui/icons-material/Login";
 
 // core components/views for Manager layout
-import DashboardPage from "views/Dashboard/Dashboard.js";
 import ManagerProfilePage from "views/manager-profile/manager-profile";
 import EmployeeManagementPage from "views/employee-management/employee-management-list";
 import CategoriesManagementPage from "views/categories-management/categories-management-list";
@@ -21,13 +19,6 @@ import BrandManagementPage from "views/brand-management/brand-management-list";
 import UnitsManagementPage from "views/unit-management/unit-management";
 
 const dashboardRoutes = [
-  {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: Dashboard,
-    component: DashboardPage,
-    layout: "/manager",
-  },
   {
     path: "/profile",
     name: "Manager Profile",

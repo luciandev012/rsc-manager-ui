@@ -14,26 +14,16 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
-import { Checkbox, FormControlLabel } from "@mui/material";
 import { useDispatch } from "react-redux/es/exports";
-import { updateBrand } from "actions/brand";
-import { deleteBrand } from "actions/brand";
+import { deleteCategory } from "actions/category";
+import { updateCategory } from "actions/category";
 
 export function TableEditButton({ data }) {
   // validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  //console.log(data);
-
-  //console.log(errors);
-
+  const { handleSubmit } = useForm();
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [name, setName] = React.useState(data.brandname);
-  const [disabled, setDisabled] = React.useState(data.disabled);
+  const [name, setName] = React.useState(data.categoryName);
   const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
@@ -46,12 +36,11 @@ export function TableEditButton({ data }) {
 
   const onSubmit = async () => {
     let putData = {
-      brandId: data.brandId,
-      brandname: name,
-      disabled: disabled,
+      categoryName: name,
+      categoryId: data.categoryId,
+      subCategories: data.subCategories,
     };
-    console.log("putDATA", putData);
-    dispatch(updateBrand(putData));
+    dispatch(updateCategory(putData));
     handleCloseEdit();
     //dispatch(getAllBrand());
   };
@@ -80,30 +69,14 @@ export function TableEditButton({ data }) {
             <TextField
               autoFocus
               margin="dense"
-              id="name"
+              id="cateName"
               label="Name"
               type="text"
-              name="brandname"
-              {...register("name", {
-                required: "Name is required.",
-              })}
-              error={Boolean(errors.name)}
-              helperText={errors.name?.message}
+              name="categoryName"
               onChange={(val) => setName(val.target.value)}
               value={name}
               variant="outlined"
               fullWidth
-              // defaultValue="Nguyen Tuan Bang"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={disabled}
-                  onChange={() => setDisabled(!disabled)}
-                  name="disabled"
-                />
-              }
-              label="Disable"
             />
           </DialogContent>
           <DialogActions>
@@ -128,11 +101,8 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    //let path = `https://localhost:5001/api/v1/Product/DeleteBrand?id=${data.brandId}`;
-    //await axios.delete(path);
-    dispatch(deleteBrand(data.brandId));
+    dispatch(deleteCategory(data.categoryId));
     setOpenDialogDelete(false);
-    //window.location.reload();
   };
   const dispatch = useDispatch();
   return (
@@ -157,7 +127,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete {data.brandname}
+            Do you want to delete {data.categoryName}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

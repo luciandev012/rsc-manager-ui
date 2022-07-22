@@ -27,16 +27,23 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCategories } from "actions/category";
+import { addCategory } from "actions/category";
 
 export default function CategoriesManagementPage() {
   // validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
-  console.log(errors);
+  const { handleSubmit } = useForm();
+  const onSubmit = () => {
+    const data = {
+      categoryName: cate.categoryName,
+      subCategories: cate.subCategories.split(",").map((sub) => {
+        return {
+          subCategoryName: sub,
+        };
+      }),
+    };
+    dispatch(addCategory(data));
+    handleClose();
+  };
 
   // page
   const [page, setPage] = useState(2);
@@ -65,6 +72,19 @@ export default function CategoriesManagementPage() {
   };
   const dispatch = useDispatch();
   const cates = useSelector((state) => state.category);
+  const [cate, setCate] = useState({
+    categoryName: "",
+    subCategories: "",
+  });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setCate((prevValue) => {
+      return {
+        ...prevValue,
+        [name]: value,
+      };
+    });
+  };
   useEffect(() => {
     dispatch(getAllCategories());
   }, []);
@@ -87,53 +107,30 @@ export default function CategoriesManagementPage() {
           onSubmit={handleSubmit(onSubmit)}
         >
           <form>
-            <DialogTitle>Add New</DialogTitle>
+            <DialogTitle>Add new category</DialogTitle>
             <DialogContent>
               <TextField
                 autoFocus
                 margin="dense"
-                id="name"
-                label="Name"
+                id="categoryName"
+                label="Category name"
                 type="text"
                 fullWidth
-                name="name"
-                {...register("name", {
-                  required: "Name is required.",
-                })}
-                error={Boolean(errors.name)}
-                helperText={errors.name?.message}
-                variant="outlined"
+                name="categoryName"
+                value={cate.categoryName}
+                onChange={handleChange}
               />
-
               <TextField
                 margin="dense"
-                id="email"
-                label="Email Address"
-                type="email"
-                fullWidth
-                name="email"
-                {...register("email", {
-                  required: "Email is required.",
-                })}
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}
-                variant="outlined"
-              />
-
-              <TextField
-                margin="dense"
-                id="phone"
-                label="Phone Number"
+                id="subCate"
+                label="Sub categories"
                 type="text"
                 fullWidth
-                name="phone"
-                {...register("phone", {
-                  required: "Phone is required.",
-                })}
-                error={Boolean(errors.phone)}
-                helperText={errors.phone?.message}
-                variant="outlined"
+                name="subCategories"
+                value={cate.subCategories}
+                onChange={handleChange}
               />
+              <p>Type sub categories here, separate by comma</p>
             </DialogContent>
             <DialogActions>
               <Button type="submit">Save</Button>

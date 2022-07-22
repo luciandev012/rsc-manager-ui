@@ -32,7 +32,8 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/manager" to="/manager/dashboard" />
+    <Route path="/inventory" />
+    <Redirect from="/manager" to="/manager/profile" />
   </Switch>
 );
 
