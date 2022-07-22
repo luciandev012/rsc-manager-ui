@@ -12,6 +12,11 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import StarBorder from "@mui/icons-material/StarBorder";
+import Collapse from "@mui/material/Collapse";
 
 // core components
 import ManagerNavbarLinks from "components/Navbars/ManagerNavbarLinks.js";
@@ -28,6 +33,11 @@ export default function Sidebar(props) {
     return location.pathname === routeName;
   }
   const { color, logo, logoText, routes } = props;
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
   var links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
@@ -46,39 +56,103 @@ export default function Sidebar(props) {
         const whiteFontClasses = classNames({
           [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path),
         });
-        return (
-          <NavLink
-            to={prop.layout + prop.path}
-            className={activePro + classes.item}
-            activeClassName="active"
-            key={key}
-          >
-            <ListItem button className={classes.itemLink + listItemClasses}>
-              {typeof prop.icon === "string" ? (
-                <Icon
-                  className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive,
+        if (prop.child) {
+          return (
+            <>
+              <ListItemButton onClick={handleClick}>
+                {typeof prop.icon === "string" ? (
+                  <Icon
+                    className={classNames(classes.itemIcon, whiteFontClasses, {
+                      [classes.itemIconRTL]: props.rtlActive,
+                    })}
+                  >
+                    {prop.icon}
+                  </Icon>
+                ) : (
+                  <prop.icon
+                    className={classNames(classes.itemIcon, whiteFontClasses, {
+                      [classes.itemIconRTL]: props.rtlActive,
+                    })}
+                  />
+                )}
+                <ListItemText
+                  primary={props.rtlActive ? prop.rtlName : prop.name}
+                  className={classNames(classes.itemText, whiteFontClasses, {
+                    [classes.itemTextRTL]: props.rtlActive,
                   })}
-                >
-                  {prop.icon}
-                </Icon>
-              ) : (
-                <prop.icon
-                  className={classNames(classes.itemIcon, whiteFontClasses, {
-                    [classes.itemIconRTL]: props.rtlActive,
-                  })}
+                  disableTypography={true}
                 />
-              )}
-              <ListItemText
-                primary={props.rtlActive ? prop.rtlName : prop.name}
-                className={classNames(classes.itemText, whiteFontClasses, {
-                  [classes.itemTextRTL]: props.rtlActive,
+              </ListItemButton>
+              <Collapse in={open} timeout="auto" unmountOnExit>
+                {prop.child.map((item, key) => {
+                  return (
+                    <>
+                      <List component="div" disablePadding>
+                        <NavLink
+                          to={item.layout + item.path}
+                          className={activePro + classes.item}
+                          activeClassName="active"
+                          key={key}
+                        >
+                          <ListItemButton sx={{ pl: 4 }}>
+                            <ListItemIcon>
+                              <StarBorder />
+                            </ListItemIcon>
+                            <ListItemText
+                              primary={item.name}
+                              className={classNames(
+                                classes.itemText,
+                                whiteFontClasses,
+                                {
+                                  [classes.itemTextRTL]: props.rtlActive,
+                                }
+                              )}
+                              disableTypography={true}
+                            />
+                          </ListItemButton>
+                        </NavLink>
+                      </List>
+                    </>
+                  );
                 })}
-                disableTypography={true}
-              />
-            </ListItem>
-          </NavLink>
-        );
+              </Collapse>
+            </>
+          );
+        } else {
+          return (
+            <NavLink
+              to={prop.layout + prop.path}
+              className={activePro + classes.item}
+              activeClassName="active"
+              key={key}
+            >
+              <ListItem button className={classes.itemLink + listItemClasses}>
+                {typeof prop.icon === "string" ? (
+                  <Icon
+                    className={classNames(classes.itemIcon, whiteFontClasses, {
+                      [classes.itemIconRTL]: props.rtlActive,
+                    })}
+                  >
+                    {prop.icon}
+                  </Icon>
+                ) : (
+                  <prop.icon
+                    className={classNames(classes.itemIcon, whiteFontClasses, {
+                      [classes.itemIconRTL]: props.rtlActive,
+                    })}
+                  />
+                )}
+                <ListItemText
+                  primary={props.rtlActive ? prop.rtlName : prop.name}
+                  className={classNames(classes.itemText, whiteFontClasses, {
+                    [classes.itemTextRTL]: props.rtlActive,
+                  })}
+                  disableTypography={true}
+                />
+              </ListItem>
+            </NavLink>
+          );
+        }
       })}
     </List>
   );

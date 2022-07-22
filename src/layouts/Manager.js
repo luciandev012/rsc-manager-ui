@@ -30,9 +30,19 @@ const switchRoutes = (
           />
         );
       }
+      if (prop.name == "Inventory Management") {
+        return prop.child.map((child, key) => {
+          return (
+            <Route
+              path={child.layout + child.path}
+              component={child.component}
+              key={key}
+            />
+          );
+        });
+      }
       return null;
     })}
-    <Route path="/inventory" />
     <Redirect from="/manager" to="/manager/profile" />
   </Switch>
 );

@@ -7,6 +7,7 @@ import auth from "./authReducer";
 import employee from "./emloyeeReducer";
 import discount from "./discountReducer";
 import order from "./orderReducer";
+import importNote from "./importReducer";
 
 const allReducers = combineReducers({
   brand,
@@ -17,6 +18,7 @@ const allReducers = combineReducers({
   employee,
   discount,
   order,
+  importNote,
 });
 
 export default allReducers;
