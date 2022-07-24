@@ -16,6 +16,7 @@ import TableCell from "@material-ui/core/TableCell";
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 import { TableDeleteButton, TableEditButton } from "./table-action";
 import Stack from "@mui/material/Stack";
+import { Avatar } from "@material-ui/core";
 
 const useStyles = makeStyles(styles);
 
@@ -52,7 +53,7 @@ export default function CustomTable(props) {
                 // Attribute
                 <TableRow key={key} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
-                    if (key != 2) {
+                    if (key != 5) {
                       return (
                         <TableCell className={classes.tableCell} key={key}>
                           {prop}
@@ -61,13 +62,7 @@ export default function CustomTable(props) {
                     } else {
                       return (
                         <TableCell className={classes.tableCell} key={key}>
-                          {prop == 3
-                            ? "Received and paid"
-                            : prop == 2
-                            ? "Confirmed"
-                            : prop == 1
-                            ? "Approved"
-                            : "Cancel order"}
+                          <Avatar src={prop} />
                         </TableCell>
                       );
                     }

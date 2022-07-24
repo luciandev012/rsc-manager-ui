@@ -5,6 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Tooltip from "@mui/material/Tooltip";
 
 import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -14,45 +15,44 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
-import { deleteOrder, updateOrder } from "actions/order";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import API from "../../helper/axios";
+import { deleteExportNote, updateExportNote } from "actions/export";
+
 export function TableEditButton({ data }) {
   // validation
   const { handleSubmit } = useForm();
   //console.log(data);
   const onSubmit = async () => {
-    dispatch(
-      updateOrder({
-        orderId: data.orderId,
-        staffId: data.staffId,
-        custormerId: data.custormerId,
-        dateCreate: data.dateCreate,
-        paymentMethodId: data.paymentMethodId,
-        status: status,
-        totalPrice: data.totalPrice,
-        orderdetails: (await getOrderByCustomerId(data.custormerId)).data[0]
-          .orderdetails,
-      })
-    );
+    const putData = {
+      exportId: data.exportId,
+      managementId: JSON.parse(localStorage.user).id,
+      exportDetailModelViews: [
+        {
+          exportDetailId: data.exportDetailId,
+          exportId: data.exportId,
+          price: exportNote.price,
+          quanlity: exportNote.quanlity,
+          productId: data.productId,
+        },
+      ],
+    };
+    dispatch(updateExportNote(putData));
     handleCloseEdit();
   };
-  const getOrderByCustomerId = (id) =>
-    API.get(`/Order/GetAllOrderIncludeOderDetailbyCustomerId?id=${id}`);
+
   //console.log(errors);
   const dispatch = useDispatch();
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [status, setStatus] = React.useState(data.status);
-
+  const [exportNote, setExportNote] = React.useState(data);
   const handleChange = (event) => {
-    const { value } = event.target;
-    setStatus(value);
+    const { name, value } = event.target;
+    setExportNote((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
-  //const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -83,24 +83,28 @@ export function TableEditButton({ data }) {
         <form>
           <DialogTitle>Edit</DialogTitle>
           <DialogContent>
-            <div>
-              <FormControl sx={{ m: 1, minWidth: 170 }}>
-                <InputLabel id="status">Status</InputLabel>
-                <Select
-                  labelId="status"
-                  id="status"
-                  value={status}
-                  onChange={handleChange}
-                  autoWidth
-                  label="Status"
-                >
-                  <MenuItem value={-1}>Cancel order</MenuItem>
-                  <MenuItem value={1}>Approved</MenuItem>
-                  <MenuItem value={2}>Confirmed</MenuItem>
-                  <MenuItem value={3}>Received and paid</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="price"
+              label="Price"
+              type="text"
+              name="price"
+              value={exportNote.price}
+              onChange={handleChange}
+              variant="outlined"
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="quantity"
+              label="Quantity"
+              type="text"
+              name="quanlity"
+              value={exportNote.quanlity}
+              onChange={handleChange}
+              variant="outlined"
+            />
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>
@@ -124,7 +128,7 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    dispatch(deleteOrder(data.orderId));
+    dispatch(deleteExportNote(data.exportId));
     setOpenDialogDelete(false);
   };
   const dispatch = useDispatch();
@@ -150,7 +154,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete this order?
+            Do you want to delete this export?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

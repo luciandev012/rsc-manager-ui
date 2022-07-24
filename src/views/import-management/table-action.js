@@ -15,58 +15,45 @@ import { PropTypes } from "prop-types";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { deleteDiscount } from "actions/discount";
-import { updateDiscount } from "actions/discount";
+import { deleteImportNote } from "actions/import";
+import { updateImportNote } from "actions/import";
 
 export function TableEditButton({ data }) {
   // validation
   const { handleSubmit } = useForm();
   //console.log(data);
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const putData = {
-      discountId: data.discountId,
-      discountName: disc.discountName,
-      discountPercent: disc.discountPercent,
-      dateCreate: formatDate(dateCreate),
-      dateEnd: formatDate(dateEnd),
+      importNoteId: data.importNoteId,
+      managementId: JSON.parse(localStorage.user).id,
+      importNoteDetailModelViews: [
+        {
+          importNoteDetailId: data.importNoteDetailId,
+          importNoteId: data.importNoteId,
+          price: importNote.price,
+          quanlity: importNote.quanlity,
+          productId: data.productId,
+        },
+      ],
     };
-    dispatch(updateDiscount(putData));
+    dispatch(updateImportNote(putData));
     handleCloseEdit();
   };
-  const formatDate = (date) => {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
 
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-
-    return [year, month, day].join("-");
-  };
   //console.log(errors);
   const dispatch = useDispatch();
   // edit
   const [openDialogEdit, setOpenDialogEdit] = React.useState(false);
-  const [disc, setDisc] = React.useState({
-    discountName: data.discountName,
-    discountPercent: data.discountPercent,
-  });
-  const [dateCreate, setDateCreate] = React.useState(data.dateCreate);
-  const [dateEnd, setDateEnd] = React.useState(data.dateEnd);
+  const [importNote, setImportNote] = React.useState(data);
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setDisc((prevValue) => {
+    setImportNote((prev) => {
       return {
-        ...prevValue,
+        ...prev,
         [name]: value,
       };
     });
   };
-  //const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
     setOpenDialogEdit(true);
@@ -98,45 +85,27 @@ export function TableEditButton({ data }) {
           <DialogTitle>Edit</DialogTitle>
           <DialogContent>
             <TextField
+              autoFocus
               margin="dense"
-              id="discountName"
-              label="Discount name"
+              id="price"
+              label="Price"
               type="text"
-              name="discountName"
-              value={disc.discountName}
+              name="price"
+              value={importNote.price}
               onChange={handleChange}
               variant="outlined"
             />
             <TextField
+              autoFocus
               margin="dense"
-              id="discountPercent"
-              label="Percent"
+              id="quantity"
+              label="Quantity"
               type="text"
-              name="discountPercent"
-              value={disc.discountPercent}
+              name="quanlity"
+              value={importNote.quanlity}
               onChange={handleChange}
               variant="outlined"
             />
-            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Create Date"
-                value={dateCreate}
-                onChange={(newValue) => {
-                  setDateCreate(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-            <LocalizationProvider className="date" dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="End Date"
-                value={dateEnd}
-                onChange={(newValue) => {
-                  setDateEnd(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
           </DialogContent>
           <DialogActions>
             <Button type="submit">Save</Button>
@@ -160,7 +129,7 @@ export function TableDeleteButton({ data }) {
     setOpenDialogDelete(false);
   };
   const handleYesDelete = async () => {
-    dispatch(deleteDiscount(data.discountId));
+    dispatch(deleteImportNote(data.importNoteId));
     setOpenDialogDelete(false);
   };
   const dispatch = useDispatch();
@@ -186,7 +155,7 @@ export function TableDeleteButton({ data }) {
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete {data.discountName}?
+            Do you want to delete this import?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

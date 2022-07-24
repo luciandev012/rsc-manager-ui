@@ -59,7 +59,7 @@ class LoginPage extends React.Component {
       localStorage.clear();
       localStorage.setItem("user", JSON.stringify(rest));
       localStorage.setItem("token", token);
-      return history.push("/profile");
+      return history.push("/manager");
     }
   };
   handleToggle = (value) => {

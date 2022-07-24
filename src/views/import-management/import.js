@@ -28,20 +28,31 @@ import DialogTitle from "@mui/material/DialogTitle";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllDiscount } from "actions/discount";
-import { addDiscount } from "actions/discount";
+import Select from "@mui/material/Select";
+import { MenuItem } from "@mui/material";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import { getAllProducts } from "actions/product";
+import { getAllImportNote } from "actions/import";
+import { addImportNote } from "actions/import";
 
 export default function ImportManagementPage() {
   // validation
   const { handleSubmit } = useForm();
   const onSubmit = () => {
     const data = {
-      discountName: disc.discountName,
-      discountPercent: disc.discountPercent,
-      dateCreate: formatDate(dateCreate),
-      dateEnd: formatDate(dateEnd),
+      managementId: JSON.parse(localStorage.user).id,
+      dateReceive: formatDate(dateCreate),
+      importNoteDetailModelViews: [
+        {
+          productId: productId,
+          price: importNote.price,
+          quanlity: importNote.quantity,
+        },
+      ],
     };
-    dispatch(addDiscount(data));
+    dispatch(addImportNote(data));
     handleClose();
   };
   const formatDate = (date) => {
@@ -75,31 +86,35 @@ export default function ImportManagementPage() {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   // close dialog
   const handleClose = () => {
     setOpen(false);
   };
   const dispatch = useDispatch();
-  const discounts = useSelector((state) => state.discount);
-  const [disc, setDisc] = useState({
-    discountName: "",
-    discountPercent: "",
+  const importNotes = useSelector((state) => state.importNote);
+  const [importNote, setImportNote] = useState({
+    price: "",
+    quantity: "",
   });
+  const [productId, setProductId] = useState("");
   const [dateCreate, setDateCreate] = useState(new Date());
-  const [dateEnd, setDateEnd] = useState(new Date());
+  const products = useSelector((state) => state.product);
+  useEffect(() => {
+    dispatch(getAllProducts());
+    dispatch(getAllImportNote());
+  }, []);
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setDisc((prevValue) => {
+    setImportNote((prevValue) => {
       return {
         ...prevValue,
         [name]: value,
       };
     });
   };
-  useEffect(() => {
-    dispatch(getAllDiscount());
-  }, []);
+  const handleChangeSelect = (event) => {
+    setProductId(event.target.value);
+  };
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -121,23 +136,41 @@ export default function ImportManagementPage() {
           <form>
             <DialogTitle>Add New</DialogTitle>
             <DialogContent>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Product</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={productId}
+                    label="Product"
+                    onChange={handleChangeSelect}
+                  >
+                    {products.map((product, key) => (
+                      <MenuItem value={product.productId} key={key}>
+                        {product.productName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
               <TextField
                 margin="dense"
-                id="discountName"
-                label="Discount name"
+                id="price"
+                label="Price"
                 type="text"
-                name="discountName"
-                value={disc.discountName}
+                name="price"
+                value={importNote.price}
                 onChange={handleChange}
                 variant="outlined"
               />
               <TextField
                 margin="dense"
-                id="discountPercent"
-                label="Percent"
+                id="quantity"
+                label="Quantity"
                 type="text"
-                name="discountPercent"
-                value={disc.discountPercent}
+                name="quantity"
+                value={importNote.quantity}
                 onChange={handleChange}
                 variant="outlined"
               />
@@ -150,19 +183,6 @@ export default function ImportManagementPage() {
                   value={dateCreate}
                   onChange={(newValue) => {
                     setDateCreate(newValue);
-                  }}
-                  renderInput={(params) => <TextField {...params} />}
-                />
-              </LocalizationProvider>
-              <LocalizationProvider
-                className="date"
-                dateAdapter={AdapterDateFns}
-              >
-                <DatePicker
-                  label="End Date"
-                  value={dateEnd}
-                  onChange={(newValue) => {
-                    setDateEnd(newValue);
                   }}
                   renderInput={(params) => <TextField {...params} />}
                 />
@@ -180,14 +200,14 @@ export default function ImportManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Name", "End date", "Percent", "Actions"]}
-              tableData={discounts.map((discount) => [
-                discount.discountId,
-                discount.discountName,
-                discount.dateEnd,
-                discount.discountPercent,
+              tableHead={["ID", "ProductId", "Quantity", "Price", "Actions"]}
+              tableData={importNotes.map((imp) => [
+                imp.importNoteId,
+                imp.productId,
+                imp.quanlity,
+                imp.price,
               ])}
-              editData={discounts}
+              editData={importNotes}
             />
           </CardBody>
           <TablePagination

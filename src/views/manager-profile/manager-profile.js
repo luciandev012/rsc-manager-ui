@@ -13,6 +13,17 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import { Avatar } from "@material-ui/core";
 // import CardFooter from "components/Card/CardFooter.js";
+// Dialog
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "components/CustomButtons/Button.js";
+import * as api from "../../apis/auth";
+
+// validation
+import { useForm } from "react-hook-form";
 
 const styles = {
   cardCategoryWhite: {
@@ -34,9 +45,48 @@ const styles = {
 };
 
 const useStyles = makeStyles(styles);
-const user = JSON.parse(window.localStorage.getItem("user"));
+
 export default function ManagerProfilePage() {
+  const user = JSON.parse(window.localStorage.getItem("user"));
+  // validation
+  const { handleSubmit } = useForm();
+  const onSubmit = async () => {
+    const changeModel = {
+      phonenumber: user.phonenumber,
+      oldPassword: model.oldPassword,
+      newPassword: model.newPassword,
+    };
+    const { data } = await api.changePassword(changeModel);
+    console.log(data);
+    handleClose();
+  };
+  //console.log(errors);
   const classes = useStyles();
+  // dialog
+  const [open, setOpen] = React.useState(false);
+  const [model, setModel] = React.useState({
+    oldPassword: "",
+    newPassword: "",
+    cfPassword: "",
+  });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setModel((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+  // open dialog
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  // close dialog
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <div>
       <GridContainer>
@@ -71,12 +121,46 @@ export default function ManagerProfilePage() {
                     }}
                   />
                 </GridItem>
-              </GridContainer>
-              <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <CustomInput
                     labelText={user.phonenumber}
                     id="phone"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    inputProps={{
+                      disabled: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText={user.address}
+                    id="address"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    inputProps={{
+                      disabled: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText={user.dateofbirth}
+                    id="date"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    inputProps={{
+                      disabled: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText={user.personalId}
+                    id="personalId"
                     formControlProps={{
                       fullWidth: true,
                     }}
@@ -101,6 +185,60 @@ export default function ManagerProfilePage() {
               {/* <Button color="primary" round>
                 Follow
               </Button> */}
+              <Button color="primary" round onClick={handleClickOpen}>
+                Change Password
+              </Button>
+
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <form>
+                  <DialogTitle>Change Password</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="oldPassword"
+                      label="Old Password"
+                      type="password"
+                      fullWidth
+                      name="oldPassword"
+                      value={model.oldPassword}
+                      onChange={handleChange}
+                    />
+
+                    <TextField
+                      margin="dense"
+                      id="newPassword"
+                      label="New Password"
+                      type="password"
+                      fullWidth
+                      name="newPassword"
+                      value={model.newPassword}
+                      onChange={handleChange}
+                    />
+
+                    <TextField
+                      margin="dense"
+                      id="cfPassword"
+                      label="Confirm Password"
+                      type="password"
+                      fullWidth
+                      name="cfPassword"
+                      value={model.cfPassword}
+                      onChange={handleChange}
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button color="primary" type="submit">
+                      Save
+                    </Button>
+                    <Button onClick={handleClose}>Cancel</Button>
+                  </DialogActions>
+                </form>
+              </Dialog>
             </CardBody>
           </Card>
         </GridItem>

@@ -45,7 +45,7 @@ export default function UnitsManagementPage() {
     );
     handleClose();
     dispatch(getAllUnit());
-    window.location.reload;
+    window.location.reload();
   };
 
   // page

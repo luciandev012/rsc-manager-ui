@@ -23,7 +23,7 @@ ReactDOM.render(
       <Switch>
         <Route path="/manager" component={Manager} />
         <Route path="/auth" component={Auth} />
-        <Redirect from="/" to="/manager/profile" />
+        <Redirect from="/" to="/auth/login" />
       </Switch>
     </BrowserRouter>
   </Provider>,

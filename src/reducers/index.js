@@ -8,6 +8,7 @@ import employee from "./emloyeeReducer";
 import discount from "./discountReducer";
 import order from "./orderReducer";
 import importNote from "./importReducer";
+import exportP from "./exportReducer";
 
 const allReducers = combineReducers({
   brand,
@@ -19,6 +20,7 @@ const allReducers = combineReducers({
   discount,
   order,
   importNote,
+  exportP,
 });
 
 export default allReducers;
