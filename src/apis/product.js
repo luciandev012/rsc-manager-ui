@@ -8,3 +8,9 @@ export const deleteProduct = (id) =>
   API.delete(`/Product/DeleteProduct?id=${id}`);
 
 export const updateProduct = (form) => API.post("/Product/UpdateProduct", form);
+
+export const getQRCode = (id) =>
+  API.post(`/Product/CreateQRCodeProduct?id=${id}`);
+
+export const getBarCode = (id) =>
+  API.post(`/Product/CreateBarCodeProduct?id=${id}`);

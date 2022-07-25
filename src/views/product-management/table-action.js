@@ -2,6 +2,8 @@ import * as React from "react";
 import Fab from "@mui/material/Fab";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import QrCodeIcon from "@mui/icons-material/QrCode";
+import CropFreeIcon from "@mui/icons-material/CropFree";
 import Tooltip from "@mui/material/Tooltip";
 
 import Button from "@mui/material/Button";
@@ -17,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux/es/exports";
 import { deleteProduct, updateProduct } from "actions/product";
 import AddIcon from "@material-ui/icons/Add";
+import * as api from "../../apis/product";
 
 export function TableEditButton({ data }) {
   // validation
@@ -214,7 +217,7 @@ export function TableDeleteButton({ data }) {
   const dispatch = useDispatch();
   return (
     <>
-      <Tooltip title="Delete" arrow>
+      <Tooltip title="delete" arrow>
         <Fab
           size="small"
           color="error"
@@ -246,9 +249,173 @@ export function TableDeleteButton({ data }) {
   );
 }
 
+export function TableAddQRButton(/*{ data }*/) {
+  // delete
+  const [openDialogAddQR, setOpenDialogAddQR] = React.useState(false);
+
+  const handleClickOpenAddQR = () => {
+    setOpenDialogAddQR(true);
+  };
+
+  const handleCloseAddQR = () => {
+    setOpenDialogAddQR(false);
+  };
+  const handleYesAddQR = async () => {
+    // dispatch(deleteProduct(data.productId));
+    setOpenDialogAddQR(false);
+  };
+  // const dispatch = useDispatch();
+  return (
+    <>
+      <Tooltip title="addQR" arrow>
+        <Fab
+          size="small"
+          color="inherit"
+          aria-label="addQR"
+          onClick={handleClickOpenAddQR}
+        >
+          <QrCodeIcon />
+        </Fab>
+      </Tooltip>
+
+      <Dialog
+        open={openDialogAddQR}
+        onClose={handleCloseAddQR}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Add QR Code"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="idProduct"
+            label="Id Product"
+            type="text"
+            name="idProduct"
+            // value={product.productName}
+            // onChange={handleChange}
+            variant="outlined"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleYesAddQR}>Yes</Button>
+          <Button onClick={handleCloseAddQR}>No</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
+
+// QR Code
+export function TableAddQrCodeButton({ data }) {
+  // add QR Code
+  const [openDialogAddQrCode, setOpenDialogAddQrCode] = React.useState(false);
+  const [imgSrc, setImgSrc] = React.useState("");
+
+  const handleClickOpenAddQrCode = async () => {
+    const res = (await api.getQRCode(data.productId)).data;
+    setImgSrc(`data:image/png;base64,${res}`);
+    setOpenDialogAddQrCode(true);
+  };
+
+  const handleCloseAddQrCode = () => {
+    setOpenDialogAddQrCode(false);
+  };
+  // const dispatch = useDispatch();
+
+  return (
+    <>
+      <Tooltip title="Add QR Code" arrow>
+        <Fab
+          size="small"
+          color="inherit"
+          aria-label="addQR"
+          onClick={handleClickOpenAddQrCode}
+        >
+          <QrCodeIcon />
+        </Fab>
+      </Tooltip>
+
+      <Dialog
+        open={openDialogAddQrCode}
+        onClose={handleCloseAddQrCode}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle id="alert-dialog-title">{"QR Code"}</DialogTitle>
+        <DialogContent>
+          <img src={imgSrc} style={{ width: "100%" }} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddQrCode}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
+
+// Bar Code
+export function TableAddBarCodeButton({ data }) {
+  // add Bar Code
+  const [openDialogAddBarCode, setOpenDialogAddBarCode] = React.useState(false);
+  const [imgSrc, setImgSrc] = React.useState("");
+
+  const handleClickOpenAddBarCode = async () => {
+    const res = (await api.getBarCode(data.productId)).data;
+    setImgSrc(`data:image/png;base64,${res}`);
+    setOpenDialogAddBarCode(true);
+  };
+
+  const handleCloseAddQrCode = () => {
+    setOpenDialogAddBarCode(false);
+  };
+
+  // const dispatch = useDispatch();
+  return (
+    <>
+      <Tooltip title="Add Bar Code" arrow>
+        <Fab
+          size="small"
+          color="inherit"
+          aria-label="addBarCode"
+          onClick={handleClickOpenAddBarCode}
+        >
+          <CropFreeIcon />
+        </Fab>
+      </Tooltip>
+
+      <Dialog
+        open={openDialogAddBarCode}
+        onClose={handleCloseAddQrCode}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle id="alert-dialog-title">{"Bar Code"}</DialogTitle>
+        <DialogContent>
+          <img src={imgSrc} style={{ width: "100%" }} />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddQrCode}>No</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+}
+
 TableEditButton.propTypes = {
   data: PropTypes.object,
 };
 TableDeleteButton.propTypes = {
+  data: PropTypes.object,
+};
+TableAddQrCodeButton.propTypes = {
+  data: PropTypes.object,
+};
+TableAddBarCodeButton.propTypes = {
   data: PropTypes.object,
 };

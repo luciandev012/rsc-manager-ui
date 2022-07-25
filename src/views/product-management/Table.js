@@ -14,7 +14,12 @@ import TableCell from "@material-ui/core/TableCell";
 // import Close from "@material-ui/icons/Close";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
-import { TableDeleteButton, TableEditButton } from "./table-action";
+import {
+  TableAddBarCodeButton,
+  TableAddQrCodeButton,
+  TableDeleteButton,
+  TableEditButton,
+} from "./table-action";
 import Stack from "@mui/material/Stack";
 import { Avatar } from "@material-ui/core";
 
@@ -73,6 +78,8 @@ export default function CustomTable(props) {
                     <Stack direction="row" spacing={0.5}>
                       <TableEditButton data={editData[key]} />
                       <TableDeleteButton data={editData[key]} />
+                      <TableAddQrCodeButton data={editData[key]} />
+                      <TableAddBarCodeButton data={editData[key]} />
                     </Stack>
                   </TableCell>
                 </TableRow>
