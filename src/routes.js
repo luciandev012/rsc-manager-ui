@@ -19,6 +19,7 @@ import BrandManagementPage from "views/brand-management/brand-management-list";
 import UnitsManagementPage from "views/unit-management/unit-management";
 import ImportManagementPage from "views/import-management/import";
 import ExportManagementPage from "views/export-management/export";
+import CustomerManagementPage from "views/customer-management/customer";
 
 const dashboardRoutes = [
   {
@@ -33,6 +34,13 @@ const dashboardRoutes = [
     name: "Employee Management",
     icon: AssignmentIndIcon,
     component: EmployeeManagementPage,
+    layout: "/manager",
+  },
+  {
+    path: "/customer-management",
+    name: "Customer Management",
+    icon: AssignmentIndIcon,
+    component: CustomerManagementPage,
     layout: "/manager",
   },
   {
@@ -106,7 +114,7 @@ const dashboardRoutes = [
   },
   {
     path: "/login",
-    name: "Login",
+    name: "Logout",
     icon: LoginIcon,
     component: LoginPage,
     layout: "/auth",
