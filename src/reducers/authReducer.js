@@ -1,17 +1,7 @@
-const initialState = {
-  username: "",
-  token: "",
-  authenticate: false,
-};
-
-const auth = (state = initialState, action) => {
+const auth = (state = {}, action) => {
   switch (action.type) {
-    case "AUTH":
-      return {
-        username: action.payload.username,
-        token: action.payload.token,
-        authenticate: true,
-      };
+    case "GET":
+      return action.payload;
     default:
       return state;
   }

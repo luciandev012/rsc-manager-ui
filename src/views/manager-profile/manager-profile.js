@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -24,6 +24,8 @@ import * as api from "../../apis/auth";
 
 // validation
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { getManager } from "actions/auth";
 
 const styles = {
   cardCategoryWhite: {
@@ -47,7 +49,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 export default function ManagerProfilePage() {
-  const user = JSON.parse(window.localStorage.getItem("user"));
+  const userId = JSON.parse(window.localStorage.getItem("user")).id;
   // validation
   const { handleSubmit } = useForm();
   const onSubmit = async () => {
@@ -69,6 +71,11 @@ export default function ManagerProfilePage() {
     newPassword: "",
     cfPassword: "",
   });
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth);
+  useEffect(() => {
+    dispatch(getManager(userId));
+  }, []);
   const handleChange = (event) => {
     const { name, value } = event.target;
     setModel((prev) => {
