@@ -132,6 +132,8 @@ export default function ImportManagementPage() {
           open={open}
           onClose={handleClose}
           onSubmit={handleSubmit(onSubmit)}
+          disableEscapeKeyDown={false}
+          onBackdropClick="false"
         >
           <form>
             <DialogTitle>Add New</DialogTitle>

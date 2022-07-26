@@ -117,6 +117,8 @@ export default function DiscountManagementPage() {
           open={open}
           onClose={handleClose}
           onSubmit={handleSubmit(onSubmit)}
+          disableEscapeKeyDown={false}
+          onBackdropClick="false"
         >
           <form>
             <DialogTitle>Add New</DialogTitle>

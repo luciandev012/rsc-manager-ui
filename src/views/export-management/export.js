@@ -133,6 +133,8 @@ export default function ExportManagementPage() {
           open={open}
           onClose={handleClose}
           onSubmit={handleSubmit(onSubmit)}
+          disableEscapeKeyDown={false}
+          onBackdropClick="false"
         >
           <form>
             <DialogTitle>Add New</DialogTitle>

@@ -69,6 +69,8 @@ export function TableEditButton({ data }) {
         open={openDialogEdit}
         onClose={handleCloseEdit}
         onSubmit={handleSubmit(onSubmit)}
+        disableEscapeKeyDown={false}
+        onBackdropClick="false"
       >
         <form>
           <DialogTitle>Edit</DialogTitle>

@@ -283,6 +283,8 @@ export function TableAddQRButton(/*{ data }*/) {
         onClose={handleCloseAddQR}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        disableEscapeKeyDown={false}
+        onBackdropClick="false"
       >
         <DialogTitle id="alert-dialog-title">{"Add QR Code"}</DialogTitle>
         <DialogContent>

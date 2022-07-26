@@ -105,6 +105,8 @@ export default function CategoriesManagementPage() {
           open={open}
           onClose={handleClose}
           onSubmit={handleSubmit(onSubmit)}
+          disableEscapeKeyDown={false}
+          onBackdropClick="false"
         >
           <form>
             <DialogTitle>Add new category</DialogTitle>

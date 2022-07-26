@@ -123,6 +123,8 @@ export function TableDeleteButton({ data }) {
         onClose={handleCloseDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        disableEscapeKeyDown={false}
+        onBackdropClick="false"
       >
         <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
         <DialogContent>

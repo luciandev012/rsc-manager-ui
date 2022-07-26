@@ -91,6 +91,8 @@ export default function BrandManagementPage() {
           open={open}
           onClose={handleClose}
           onSubmit={handleSubmit(onSubmit)}
+          disableEscapeKeyDown={false}
+          onBackdropClick="false"
         >
           <form>
             <DialogTitle>Add new brand</DialogTitle>
