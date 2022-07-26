@@ -59,7 +59,10 @@ export default function Sidebar(props) {
         if (prop.child) {
           return (
             <>
-              <ListItemButton onClick={handleClick}>
+              <ListItemButton
+                onClick={handleClick}
+                style={{ paddingLeft: "2rem" }}
+              >
                 {typeof prop.icon === "string" ? (
                   <Icon
                     className={classNames(classes.itemIcon, whiteFontClasses, {
