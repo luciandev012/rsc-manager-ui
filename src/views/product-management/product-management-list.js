@@ -74,6 +74,18 @@ export default function ProductManagementPage() {
 
   // close dialog
   const handleClose = () => {
+    setProduct({
+      productId: 1,
+      productName: "",
+      productCode: "",
+      productDescribe: "",
+      price: "",
+      quantity: "",
+      discountId: "",
+      subCategoryId: "",
+      unitId: "",
+      categoryId: "",
+    });
     setOpen(false);
   };
 

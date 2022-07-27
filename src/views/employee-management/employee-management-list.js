@@ -94,6 +94,17 @@ export default function EmployeeManagementPage() {
 
   // close dialog
   const handleClose = () => {
+    setEmploy({
+      fullname: "",
+      phonenumber: "",
+      email: "",
+      address: "",
+      gender: "",
+      personalId: "",
+      cwtId: 1,
+      username: "",
+      password: "",
+    });
     setOpen(false);
   };
   const dispatch = useDispatch();
@@ -196,7 +207,7 @@ export default function EmployeeManagementPage() {
                 {...register("username", {
                   required: "Username is required.",
                   pattern: {
-                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/i,
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$/i,
                     message: "Invalid username",
                   },
                 })}
