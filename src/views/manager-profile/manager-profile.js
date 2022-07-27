@@ -51,7 +51,11 @@ const useStyles = makeStyles(styles);
 export default function ManagerProfilePage() {
   const userId = JSON.parse(window.localStorage.getItem("user")).id;
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   const onSubmit = async () => {
     const changeModel = {
       phonenumber: user.phonenumber,
@@ -59,7 +63,10 @@ export default function ManagerProfilePage() {
       newPassword: model.newPassword,
     };
     const { data } = await api.changePassword(changeModel);
-    console.log(data);
+    //console.log(data);
+    if (data != true) {
+      alert(data);
+    }
     handleClose();
   };
   //console.log(errors);
@@ -211,6 +218,11 @@ export default function ManagerProfilePage() {
                       label="Old Password"
                       type="password"
                       fullWidth
+                      {...register("oldPassword", {
+                        required: "Password is required.",
+                      })}
+                      error={!!errors.oldPassword}
+                      helperText={errors.oldPassword?.message}
                       name="oldPassword"
                       value={model.oldPassword}
                       onChange={handleChange}
@@ -223,6 +235,11 @@ export default function ManagerProfilePage() {
                       type="password"
                       fullWidth
                       name="newPassword"
+                      {...register("newPassword", {
+                        required: "New password is required.",
+                      })}
+                      error={!!errors.newPassword}
+                      helperText={errors.newPassword?.message}
                       value={model.newPassword}
                       onChange={handleChange}
                     />
@@ -234,6 +251,11 @@ export default function ManagerProfilePage() {
                       type="password"
                       fullWidth
                       name="cfPassword"
+                      {...register("cfPassword", {
+                        required: "Confirm password is required.",
+                      })}
+                      error={!!errors.cfPassword}
+                      helperText={errors.cfPassword?.message}
                       value={model.cfPassword}
                       onChange={handleChange}
                     />

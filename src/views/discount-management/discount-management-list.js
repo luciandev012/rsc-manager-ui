@@ -33,7 +33,11 @@ import { addDiscount } from "actions/discount";
 
 export default function DiscountManagementPage() {
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   const onSubmit = () => {
     const data = {
       discountName: disc.discountName,
@@ -129,6 +133,11 @@ export default function DiscountManagementPage() {
                 label="Discount name"
                 type="text"
                 name="discountName"
+                {...register("discountName", {
+                  required: "Discount name is required.",
+                })}
+                error={Boolean(errors.discountName)}
+                helperText={errors.discountName?.message}
                 value={disc.discountName}
                 onChange={handleChange}
                 variant="outlined"
@@ -139,6 +148,11 @@ export default function DiscountManagementPage() {
                 label="Percent"
                 type="text"
                 name="discountPercent"
+                {...register("discountPercent", {
+                  required: "Discount percent is required.",
+                })}
+                error={Boolean(errors.discountPercent)}
+                helperText={errors.discountPercent?.message}
                 value={disc.discountPercent}
                 onChange={handleChange}
                 variant="outlined"

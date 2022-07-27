@@ -38,7 +38,11 @@ import { addEmployee } from "actions/employee";
 
 export default function EmployeeManagementPage() {
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   const onSubmit = () => {
     const fd = new FormData();
     fd.append("fileAvatar", image);
@@ -153,6 +157,11 @@ export default function EmployeeManagementPage() {
                 label="Full name"
                 type="text"
                 name="fullname"
+                {...register("fullname", {
+                  required: "Full name is required.",
+                })}
+                error={!!errors.fullname}
+                helperText={errors.fullname?.message}
                 value={employ.fullname}
                 onChange={handleChange}
                 variant="outlined"
@@ -164,6 +173,15 @@ export default function EmployeeManagementPage() {
                 label="Email"
                 type="text"
                 name="email"
+                {...register("email", {
+                  required: "Email is required.",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
                 value={employ.email}
                 onChange={handleChange}
                 variant="outlined"
@@ -175,6 +193,15 @@ export default function EmployeeManagementPage() {
                 label="User Name"
                 type="text"
                 name="username"
+                {...register("username", {
+                  required: "Username is required.",
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/i,
+                    message: "Invalid username",
+                  },
+                })}
+                error={!!errors.username}
+                helperText={errors.username?.message}
                 value={employ.username}
                 onChange={handleChange}
                 variant="outlined"
@@ -185,6 +212,11 @@ export default function EmployeeManagementPage() {
                 label="Password"
                 type="password"
                 name="password"
+                {...register("password", {
+                  required: "Password is required.",
+                })}
+                error={!!errors.password}
+                helperText={errors.password?.message}
                 value={employ.password}
                 onChange={handleChange}
                 variant="outlined"
@@ -195,6 +227,11 @@ export default function EmployeeManagementPage() {
                 label="Address"
                 type="text"
                 name="address"
+                {...register("address", {
+                  required: "Address is required.",
+                })}
+                error={!!errors.address}
+                helperText={errors.address?.message}
                 value={employ.address}
                 onChange={handleChange}
                 variant="outlined"
@@ -205,6 +242,11 @@ export default function EmployeeManagementPage() {
                 label="Personal Id"
                 type="text"
                 name="personalId"
+                {...register("personalId", {
+                  required: "PersonalId is required.",
+                })}
+                error={!!errors.personalId}
+                helperText={errors.personalId?.message}
                 value={employ.personalId}
                 onChange={handleChange}
                 variant="outlined"
@@ -228,6 +270,15 @@ export default function EmployeeManagementPage() {
                 label="Phone number"
                 type="text"
                 name="phonenumber"
+                {...register("phonenumber", {
+                  required: "Phone number is required.",
+                  pattern: {
+                    value: /^[0-9]{10,}$/i,
+                    message: "Invalid phone number",
+                  },
+                })}
+                error={!!errors.phonenumber}
+                helperText={errors.phonenumber?.message}
                 value={employ.phonenumber}
                 onChange={handleChange}
                 variant="outlined"

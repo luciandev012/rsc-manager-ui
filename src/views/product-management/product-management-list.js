@@ -31,7 +31,11 @@ import { addProduct } from "actions/product";
 
 export default function ProductManagementPage() {
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   const onSubmit = () => {
     const fd = new FormData();
     fd.append("files", image);
@@ -134,6 +138,11 @@ export default function ProductManagementPage() {
                 label="Product Name"
                 type="text"
                 name="productName"
+                {...register("productName", {
+                  required: "Product name is required.",
+                })}
+                error={!!errors.productName}
+                helperText={errors.productName?.message}
                 value={product.productName}
                 onChange={handleChange}
                 variant="outlined"
@@ -144,6 +153,11 @@ export default function ProductManagementPage() {
                 label="Product Code"
                 type="text"
                 name="productCode"
+                {...register("productCode", {
+                  required: "Product code is required.",
+                })}
+                error={!!errors.productCode}
+                helperText={errors.productCode?.message}
                 value={product.productCode}
                 onChange={handleChange}
                 variant="outlined"
@@ -154,6 +168,11 @@ export default function ProductManagementPage() {
                 label="Product Describe"
                 type="text"
                 name="productDescribe"
+                {...register("productDescribe", {
+                  required: "Product describe is required.",
+                })}
+                error={!!errors.productDescribe}
+                helperText={errors.productDescribe?.message}
                 value={product.productDescribe}
                 onChange={handleChange}
                 variant="outlined"
@@ -164,6 +183,11 @@ export default function ProductManagementPage() {
                 label="Price"
                 type="text"
                 name="price"
+                {...register("price", {
+                  required: "Price is required.",
+                })}
+                error={!!errors.price}
+                helperText={errors.price?.message}
                 value={product.price}
                 onChange={handleChange}
                 variant="outlined"
@@ -174,6 +198,11 @@ export default function ProductManagementPage() {
                 label="Quantity"
                 type="text"
                 name="quantity"
+                {...register("quantity", {
+                  required: "Price is required.",
+                })}
+                error={!!errors.quantity}
+                helperText={errors.quantity?.message}
                 value={product.quantity}
                 onChange={handleChange}
                 variant="outlined"
@@ -185,6 +214,11 @@ export default function ProductManagementPage() {
                 label="Unit Id"
                 type="text"
                 name="unitId"
+                {...register("unitId", {
+                  required: "Unit id is required.",
+                })}
+                error={!!errors.unitId}
+                helperText={errors.unitId?.message}
                 value={product.unitId}
                 onChange={handleChange}
                 variant="outlined"
@@ -196,6 +230,11 @@ export default function ProductManagementPage() {
                 label="Sub Category Id"
                 type="text"
                 name="subCategoryId"
+                {...register("subCategoryId", {
+                  required: "Sub category is required.",
+                })}
+                error={!!errors.subCategoryId}
+                helperText={errors.subCategoryId?.message}
                 value={product.subCategoryId}
                 onChange={handleChange}
                 variant="outlined"

@@ -31,7 +31,11 @@ import { addCategory } from "actions/category";
 
 export default function CategoriesManagementPage() {
   // validation
-  const { handleSubmit } = useForm();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
   const onSubmit = () => {
     const data = {
       categoryName: cate.categoryName,
@@ -119,8 +123,14 @@ export default function CategoriesManagementPage() {
                 type="text"
                 fullWidth
                 name="categoryName"
+                {...register("categoryName", {
+                  required: "Category name is required.",
+                })}
+                error={Boolean(errors.categoryName)}
+                helperText={errors.categoryName?.message}
                 value={cate.categoryName}
                 onChange={handleChange}
+                variant="outlined"
               />
               <TextField
                 margin="dense"
@@ -129,6 +139,11 @@ export default function CategoriesManagementPage() {
                 type="text"
                 fullWidth
                 name="subCategories"
+                {...register("subCategories", {
+                  required: "SubCategory name is required.",
+                })}
+                error={Boolean(errors.subCategories)}
+                helperText={errors.subCategories?.message}
                 value={cate.subCategories}
                 onChange={handleChange}
               />

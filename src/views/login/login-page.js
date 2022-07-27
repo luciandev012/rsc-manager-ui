@@ -38,8 +38,10 @@ class LoginPage extends React.Component {
       username: "",
       password: "",
     };
+    window.localStorage.clear();
   }
   //dispatch = useDispatch();
+
   login = async (e) => {
     e.preventDefault();
     const fields = ["username", "password"];
@@ -50,17 +52,20 @@ class LoginPage extends React.Component {
         [field]: formElements.namedItem(field).value,
       }))
       .reduce((current, next) => ({ ...current, ...next }));
-    const { data, status } = await axiosIntance.post(
-      `/Account/Login?namePage=managerpage`,
-      formValues
-    );
-    if (status == 200) {
-      const { token, ...rest } = data;
-      localStorage.clear();
-      localStorage.setItem("user", JSON.stringify(rest));
-      localStorage.setItem("token", token);
-      return history.push("/manager");
-    }
+    axiosIntance
+      .post(`/Account/Login?namePage=managerpage`, formValues)
+      .then((response) => {
+        if (response.status == 200) {
+          const { token, ...rest } = response.data;
+          localStorage.clear();
+          localStorage.setItem("user", JSON.stringify(rest));
+          localStorage.setItem("token", token);
+          return history.push("/manager");
+        }
+      })
+      .catch(() => {
+        alert("Incorrect password");
+      });
   };
   handleToggle = (value) => {
     const { checked } = this.state;
