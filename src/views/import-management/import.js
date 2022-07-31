@@ -116,6 +116,21 @@ export default function ImportManagementPage() {
       };
     });
   };
+  const [subCateList, setSubCateList] = useState([{ subCategoryName: "" }]);
+  const handleAdd = () => {
+    setSubCateList([...subCateList, { subCategoryName: "" }]);
+  };
+  const handleDelete = (index) => {
+    const list = [...subCateList];
+    list.splice(index, 1);
+    setSubCateList(list);
+  };
+  const handleSubcateChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...subCateList];
+    list[index][name] = value;
+    setSubCateList(list);
+  };
   const handleChangeSelect = (event) => {
     setProductId(event.target.value);
   };
@@ -180,6 +195,32 @@ export default function ImportManagementPage() {
                 onChange={handleChange}
                 variant="outlined"
               />
+              <Button onClick={handleAdd} type="button">
+                Add sub category
+              </Button>
+              {subCateList.map((subc, index) => (
+                <>
+                  <TextField
+                    key={index}
+                    margin="dense"
+                    id="subCate"
+                    label="Sub categories"
+                    type="text"
+                    fullWidth
+                    name="subCategoryName"
+                    // {...register("subCate", {
+                    //   required: "SubCategory name is required.",
+                    // })}
+                    // error={Boolean(errors.subCate)}
+                    // helperText={errors.subCate?.message}
+                    value={subc.subCategoryName}
+                    onChange={(e) => handleSubcateChange(e, index)}
+                  />
+                  <Button type="button" onClick={() => handleDelete(index)}>
+                    Remove
+                  </Button>
+                </>
+              ))}
               <LocalizationProvider
                 className="date"
                 dateAdapter={AdapterDateFns}

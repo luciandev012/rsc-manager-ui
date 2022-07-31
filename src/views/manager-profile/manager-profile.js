@@ -55,12 +55,13 @@ export default function ManagerProfilePage() {
     handleSubmit,
     register,
     formState: { errors },
+    resetField,
   } = useForm();
-  const onSubmit = async () => {
+  const onSubmit = async (pData) => {
     const changeModel = {
       phonenumber: user.phonenumber,
-      oldPassword: model.oldPassword,
-      newPassword: model.newPassword,
+      oldPassword: pData.oldPassword,
+      newPassword: pData.newPassword,
     };
     const { data } = await api.changePassword(changeModel);
     //console.log(data);
@@ -75,25 +76,25 @@ export default function ManagerProfilePage() {
   const classes = useStyles();
   // dialog
   const [open, setOpen] = React.useState(false);
-  const [model, setModel] = React.useState({
-    oldPassword: "",
-    newPassword: "",
-    cfPassword: "",
-  });
+  // const [model, setModel] = React.useState({
+  //   oldPassword: "",
+  //   newPassword: "",
+  //   cfPassword: "",
+  // });
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth);
   useEffect(() => {
     dispatch(getManager(userId));
   }, []);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setModel((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setModel((prev) => {
+  //     return {
+  //       ...prev,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
   // open dialog
   const handleClickOpen = () => {
     setOpen(true);
@@ -101,11 +102,9 @@ export default function ManagerProfilePage() {
 
   // close dialog
   const handleClose = () => {
-    setModel({
-      oldPassword: "",
-      newPassword: "",
-      cfPassword: "",
-    });
+    resetField("oldPassword");
+    resetField("newPassword");
+    resetField("cfPassword");
     setOpen(false);
   };
   return (
@@ -231,8 +230,8 @@ export default function ManagerProfilePage() {
                       error={!!errors.oldPassword}
                       helperText={errors.oldPassword?.message}
                       name="oldPassword"
-                      value={model.oldPassword}
-                      onChange={handleChange}
+                      // value={model.oldPassword}
+                      // onChange={handleChange}
                     />
 
                     <TextField
@@ -252,8 +251,8 @@ export default function ManagerProfilePage() {
                       })}
                       error={!!errors.newPassword}
                       helperText={errors.newPassword?.message}
-                      value={model.newPassword}
-                      onChange={handleChange}
+                      // value={model.newPassword}
+                      // onChange={handleChange}
                     />
 
                     <TextField
@@ -273,8 +272,8 @@ export default function ManagerProfilePage() {
                       })}
                       error={!!errors.cfPassword}
                       helperText={errors.cfPassword?.message}
-                      value={model.cfPassword}
-                      onChange={handleChange}
+                      // value={model.cfPassword}
+                      // onChange={handleChange}
                     />
                   </DialogContent>
                   <DialogActions>
