@@ -66,6 +66,8 @@ export default function ManagerProfilePage() {
     //console.log(data);
     if (data != true) {
       alert(data);
+    } else {
+      alert("Change password successfully!");
     }
     handleClose();
   };
@@ -99,6 +101,11 @@ export default function ManagerProfilePage() {
 
   // close dialog
   const handleClose = () => {
+    setModel({
+      oldPassword: "",
+      newPassword: "",
+      cfPassword: "",
+    });
     setOpen(false);
   };
   return (
@@ -237,6 +244,11 @@ export default function ManagerProfilePage() {
                       name="newPassword"
                       {...register("newPassword", {
                         required: "New password is required.",
+                        pattern: {
+                          value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/i,
+                          message:
+                            "Password must have Uppercase, Lowercase, Special Char, Number and minLength: 6",
+                        },
                       })}
                       error={!!errors.newPassword}
                       helperText={errors.newPassword?.message}
@@ -253,6 +265,11 @@ export default function ManagerProfilePage() {
                       name="cfPassword"
                       {...register("cfPassword", {
                         required: "Confirm password is required.",
+                        pattern: {
+                          value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/i,
+                          message:
+                            "Password must have Uppercase, Lowercase, Special Char, Number and minLength: 6",
+                        },
                       })}
                       error={!!errors.cfPassword}
                       helperText={errors.cfPassword?.message}
