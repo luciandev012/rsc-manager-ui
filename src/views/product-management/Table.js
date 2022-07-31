@@ -49,10 +49,11 @@ export default function CustomTable(props) {
   // show information
   const [openShowInformation, setOpenShowInformation] = React.useState(false);
 
-  const handleClickOpenShowInformation = () => {
+  const handleClickOpenShowInformation = (key) => {
+    setDetail(editData[key]);
     setOpenShowInformation(true);
   };
-
+  const [detail, setDetail] = React.useState({});
   const handleCloseShowInformation = () => {
     setOpenShowInformation(false);
   };
@@ -81,17 +82,17 @@ export default function CustomTable(props) {
         ) : null}
         {tableData !== undefined ? (
           <TableBody>
-            {tableData.map((prop, key) => {
+            {tableData.map((prop, fkey) => {
               return (
                 // Attribute
-                <TableRow hover key={key} className={classes.tableBodyRow}>
+                <TableRow hover key={fkey} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
                     if (key != 3) {
                       return (
                         <TableCell
                           className={classes.tableCell}
                           key={key}
-                          onClick={handleClickOpenShowInformation}
+                          onClick={() => handleClickOpenShowInformation(fkey)}
                         >
                           {prop}
                         </TableCell>
@@ -101,7 +102,7 @@ export default function CustomTable(props) {
                         <TableCell
                           className={classes.tableCell}
                           key={key}
-                          onClick={handleClickOpenShowInformation}
+                          onClick={() => handleClickOpenShowInformation(fkey)}
                         >
                           <Avatar src={prop} />
                         </TableCell>
@@ -110,12 +111,12 @@ export default function CustomTable(props) {
                   })}
 
                   {/* Actions */}
-                  <TableCell className={classes.tableCell} key={key}>
+                  <TableCell className={classes.tableCell} key={fkey}>
                     <Stack direction="row" spacing={0.5}>
-                      <TableEditButton data={editData[key]} />
-                      <TableDeleteButton data={editData[key]} />
-                      <TableAddQrCodeButton data={editData[key]} />
-                      <TableAddBarCodeButton data={editData[key]} />
+                      <TableEditButton data={editData[fkey]} />
+                      <TableDeleteButton data={editData[fkey]} />
+                      <TableAddQrCodeButton data={editData[fkey]} />
+                      <TableAddBarCodeButton data={editData[fkey]} />
                     </Stack>
                   </TableCell>
                 </TableRow>
@@ -124,16 +125,16 @@ export default function CustomTable(props) {
           </TableBody>
         ) : (
           <TableBody>
-            {tableData.map((prop, key) => {
+            {tableData.map((prop, fkey) => {
               return (
                 // Attribute
-                <TableRow key={key} className={classes.tableBodyRow}>
+                <TableRow key={fkey} className={classes.tableBodyRow}>
                   {prop.map((prop, key) => {
                     return (
                       <TableCell
                         className={classes.tableCell}
                         key={key}
-                        onClick={handleClickOpenShowInformation}
+                        onClick={() => handleClickOpenShowInformation(fkey)}
                       >
                         {prop}
                       </TableCell>
@@ -173,30 +174,32 @@ export default function CustomTable(props) {
           </ListItem>
 
           <ListItem>
-            <ListItemText primary="Product Name" secondary="Mướm Hương" />
+            <ListItemText
+              primary="Product Name"
+              secondary={detail.productName}
+            />
           </ListItem>
 
           <ListItem>
-            <ListItemText primary="Product Code" secondary="SKU: 10053905" />
+            <ListItemText
+              primary="Product Code"
+              secondary={detail.productCode}
+            />
           </ListItem>
 
           <ListItem>
             <ListItemText
               primary="Product Describe"
-              secondary="Mướp hương là một trong những loại rau củ rất quen thuộc đối với người Việt Nam. Với mướp hương, chúng ta có thể chế biến được rất nhiều món ăn hấp dẫn và giàu dinh dưỡng. Mỗi quả mướp hương được nuôi trồng và chăm chút rất cẩn thận. Những sản phẩm được bày bán trên gian hàng đều đã trải qua quá trình tuyển chọn kỹ càng. Sản phẩm được phân phối bởi Vinmart và được bảo quản cẩn thận và chặt chẽ để mang tới cho khách hàng những sản phẩm có chất lượng tốt nhất."
+              secondary={detail.productDescribe}
             />
           </ListItem>
 
           <ListItem>
-            <ListItemText primary="Image" secondary="1" />
+            <ListItemText primary="Price" secondary={detail.price} />
           </ListItem>
 
           <ListItem>
-            <ListItemText primary="Price" secondary="19" />
-          </ListItem>
-
-          <ListItem>
-            <ListItemText primary="Quantity" secondary="2" />
+            <ListItemText primary="Quantity" secondary={detail.quantity} />
           </ListItem>
         </List>
       </Dialog>
