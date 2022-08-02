@@ -58,19 +58,23 @@ export default function ManagerProfilePage() {
     resetField,
   } = useForm();
   const onSubmit = async (pData) => {
-    const changeModel = {
-      phonenumber: user.phonenumber,
-      oldPassword: pData.oldPassword,
-      newPassword: pData.newPassword,
-    };
-    const { data } = await api.changePassword(changeModel);
-    //console.log(data);
-    if (data != true) {
-      alert(data);
+    if (pData.newPassword === pData.cfPassword) {
+      const changeModel = {
+        phonenumber: user.phonenumber,
+        oldPassword: pData.oldPassword,
+        newPassword: pData.newPassword,
+      };
+      const { data } = await api.changePassword(changeModel);
+      //console.log(data);
+      if (data != true) {
+        alert(data);
+      } else {
+        alert("Change password successfully!");
+      }
+      handleClose();
     } else {
-      alert("Change password successfully!");
+      alert("Confirm password not match new password!");
     }
-    handleClose();
   };
   //console.log(errors);
   const classes = useStyles();

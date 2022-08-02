@@ -113,13 +113,6 @@ export default function ImportManagementPage() {
     const list = [...listProduct];
     list[index][name] = value;
     setListProduct(list);
-    // const { name, value } = event.target;
-    // setImportNote((prevValue) => {
-    //   return {
-    //     ...prevValue,
-    //     [name]: value,
-    //   };
-    // });
   };
   const [listProduct, setListProduct] = useState([]);
   const handleChangeSelect = (event) => {

@@ -55,6 +55,7 @@ export function TableEditButton({ data }) {
   //const dispatch = useDispatch();
 
   const handleClickOpenEdit = () => {
+    console.log(status);
     setOpenDialogEdit(true);
   };
 
