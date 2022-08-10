@@ -12,7 +12,7 @@ import exportP from "./exportReducer";
 import revenue from "./revenueReducer";
 import customer from "./customerReducer";
 import warning from "./warningReducer";
-
+import subcate from "./subcategoryReducer";
 const allReducers = combineReducers({
   brand,
   product,
@@ -27,6 +27,7 @@ const allReducers = combineReducers({
   revenue,
   customer,
   warning,
+  subcate,
 });
 
 export default allReducers;
