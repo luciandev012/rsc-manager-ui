@@ -118,7 +118,7 @@ export default function CustomTable(props) {
                     <Stack direction="row" spacing={0.5}>
                       <TableDeleteButton data={editData[fkey]} />
                       <TableEditButton data={editData[fkey]} />
-                      <BillButton />
+                      <BillButton data={editData[fkey]} />
                     </Stack>
                   </TableCell>
                 </TableRow>

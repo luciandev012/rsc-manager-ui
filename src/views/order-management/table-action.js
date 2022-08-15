@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 // validation
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux/es/exports";
+import { useDispatch, useSelector } from "react-redux/es/exports";
 import { deleteOrder, updateOrder } from "actions/order";
 // import InputLabel from "@mui/material/InputLabel";
 // import FormControl from "@mui/material/FormControl";
@@ -37,6 +37,7 @@ import List from "@mui/material/List";
 import { PDFExport } from "@progress/kendo-react-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useRef } from "react";
+import { getBillByOrder } from "actions/bill";
 
 // import Divider from "@mui/material/Divider";
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -230,11 +231,14 @@ export function TableDeleteButton({ data }) {
   );
 }
 
-export function BillButton() {
+export function BillButton(data) {
   // show information
   const [openShowInformation, setOpenShowInformation] = React.useState(false);
-
+  const dispatch = useDispatch();
   const handleClickOpenShowInformation = () => {
+    //console.log(data);
+    dispatch(getBillByOrder(data.data.orderId, 2));
+    console.log(bill);
     setOpenShowInformation(true);
   };
 
@@ -243,7 +247,7 @@ export function BillButton() {
   };
 
   const pdfExportComponent = useRef(null);
-
+  const bill = useSelector((state) => state.bill);
   const handleExportWithComponent = () => {
     pdfExportComponent.current.save();
   };
@@ -295,9 +299,57 @@ export function BillButton() {
         </AppBar>
         <PDFExport ref={pdfExportComponent} paperSize="A4">
           <List>
-            <ListItem>
-              <ListItemText primary="Total price" secondary="" />
-            </ListItem>
+            {bill
+              ? bill.map((billDetail, index) => (
+                  <div key={index}>
+                    <ListItem>
+                      <ListItemText
+                        primary="Dish name"
+                        secondary={billDetail.dishName}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText
+                        primary="Dish description"
+                        secondary={billDetail.dishDescription}
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemText
+                        primary="Dish cooking"
+                        secondary={billDetail.dishCooking}
+                      />
+                    </ListItem>
+                    <List>
+                      {billDetail.dishDetails
+                        ? billDetail.dishDetails.map((dish, index) => (
+                            <div key={index}>
+                              <ListItem>
+                                <ListItemText
+                                  primary="Product name"
+                                  secondary={dish.productName}
+                                />
+                              </ListItem>
+                              <ListItem>
+                                <ListItemText
+                                  primary="Unit"
+                                  secondary={dish.unitName}
+                                />
+                              </ListItem>
+                              <ListItem>
+                                <ListItemText
+                                  primary="Quantity"
+                                  secondary={dish.quantity}
+                                />
+                              </ListItem>
+                            </div>
+                          ))
+                        : null}
+                    </List>
+                    <br />
+                  </div>
+                ))
+              : null}
           </List>
         </PDFExport>
       </Dialog>
