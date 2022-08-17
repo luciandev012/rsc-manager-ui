@@ -36,7 +36,6 @@ export default function ManagerNavbarLinks() {
   };
   const dispatch = useDispatch();
   const warnings = useSelector((state) => state.warning);
-  console.log(warnings);
   useEffect(() => {
     dispatch(getWarning());
   }, []);

@@ -38,6 +38,11 @@ import { PDFExport } from "@progress/kendo-react-pdf";
 import DownloadIcon from "@mui/icons-material/Download";
 import { useRef } from "react";
 import { getBillByOrder } from "actions/bill";
+import Table from "./table-bill";
+import Card from "components/Card/Card.js";
+// import CardHeader from "components/Card/CardHeader.js";
+import CardBody from "components/Card/CardBody.js";
+import "./bill.css";
 
 // import Divider from "@mui/material/Divider";
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -216,10 +221,10 @@ export function TableDeleteButton({ data }) {
         disableEscapeKeyDown={false}
         onBackdropClick="false"
       >
-        <DialogTitle id="alert-dialog-title">{"Xóa"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"X a"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Bạn có muốn xóa đơn đặt hàng này không?
+            Bạn có muốn xóa đơn hàng này không?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -232,13 +237,32 @@ export function TableDeleteButton({ data }) {
 }
 
 export function BillButton(data) {
+  const [customer, setCustomer] = React.useState({});
+  const [orderDetails, setOrderDetails] = React.useState([]);
+  const pdfExportComponent = useRef(null);
+  const bill = useSelector((state) => state.bill);
   // show information
   const [openShowInformation, setOpenShowInformation] = React.useState(false);
   const dispatch = useDispatch();
   const handleClickOpenShowInformation = () => {
-    //console.log(data);
-    dispatch(getBillByOrder(data.data.orderId, 2));
-    console.log(bill);
+    //console.log(data.data.custormerId);
+    API.get(`/Customer/GetCustomer?id=${data.data.custormerId}`)
+      .then((res) => {
+        setCustomer(res.data);
+      })
+      .catch((err) => console.log(err));
+    dispatch(getBillByOrder(data.data.orderId, 1));
+    const listOrder = [];
+    data.data.orderdetails.forEach(async (od) => {
+      const res = await API.get(`/Product/GetProductById?id=${od.productId}`);
+      const orderDetail = {
+        productName: res.data.productName,
+        quantity: od.quantity,
+        price: od.price,
+      };
+      listOrder.push(orderDetail);
+    });
+    setOrderDetails(listOrder);
     setOpenShowInformation(true);
   };
 
@@ -246,8 +270,6 @@ export function BillButton(data) {
     setOpenShowInformation(false);
   };
 
-  const pdfExportComponent = useRef(null);
-  const bill = useSelector((state) => state.bill);
   const handleExportWithComponent = () => {
     pdfExportComponent.current.save();
   };
@@ -298,6 +320,72 @@ export function BillButton(data) {
           </Toolbar>
         </AppBar>
         <PDFExport ref={pdfExportComponent} paperSize="A4">
+          <div id="example">
+            <div className="box wide hidden-on-narrow">
+              <div className="box-col" />
+
+              <div className="box-col" />
+            </div>
+
+            <div className="page-container hidden-on-narrow">
+              <div className="pdf-page size-a4">
+                <div className="inner-page">
+                  <div className="pdf-header">
+                    <span className="company-logo">Hóa đơn bán hàng</span>
+                  </div>
+
+                  <div className="pdf-footer addresses">
+                    <h3 className="for" style={{ fontWeight: "bold" }}>
+                      Tổng cộng
+                    </h3>
+                    <h3
+                      className="from"
+                      style={{ fontWeight: "bold" }}
+                      align="right"
+                    >
+                      {data.data.totalPrice}
+                    </h3>
+                    <br />
+                    <br />
+
+                    <h4 align="center">Xin cảm ơn quý khách!</h4>
+                  </div>
+
+                  <div className="addresses">
+                    <h4>
+                      Khách hàng: {customer.fullname}
+                      <br />
+                      Số điện thoại: {customer.phonenumber}
+                      <br />
+                      Địa chỉ: {customer.address}
+                    </h4>
+                  </div>
+
+                  <div className="pdf-body">
+                    <Card>
+                      <CardBody>
+                        <Table
+                          tableHeaderColor="warning"
+                          tableHead={[
+                            "Tên",
+                            "Số lượng",
+                            "Tổng giá",
+                            "Ngày xuất hóa đơn",
+                          ]}
+                          tableData={orderDetails.map((od) => [
+                            od.productName,
+                            od.quantity,
+                            od.price,
+                            data.data.dateCreate,
+                          ])}
+                        />
+                      </CardBody>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <List>
             {bill
               ? bill.map((billDetail, index) => (

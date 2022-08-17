@@ -167,7 +167,7 @@ export default function CustomTable(props) {
               <CloseIcon />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Thông tin đơn hàng
+              Thông tin
             </Typography>
           </Toolbar>
         </AppBar>
@@ -176,7 +176,7 @@ export default function CustomTable(props) {
           <ListItem>
             <ListItemText
               primary="Ngày tạo"
-              secondary={moment(detail.dateCreate).format("DD MMM YYYY")}
+              secondary={moment(detail.dateCreate).format("MM/DD/YYYY")}
             />
           </ListItem>
 
