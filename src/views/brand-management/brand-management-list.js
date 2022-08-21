@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -13,9 +13,6 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
-// paging
-import TablePagination from "@mui/material/TablePagination";
-
 // dialog
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -29,12 +26,38 @@ import { useDispatch, useSelector } from "react-redux/es/exports";
 import { getAllBrand } from "actions/brand";
 import { addBrand } from "actions/brand";
 
-export default function BrandManagementPage() {
+import MenuItem from "@mui/material/MenuItem";
+import { styled } from "@mui/material/styles";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+
+import Box from "@mui/material/Box";
+
+const ListItem = styled("li")(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
+const currencies = [
+  {
+    value: "Thịt heo",
+    label: "Thịt heo",
+  },
+  {
+    value: "Thịt bò",
+    label: "Thịt bò",
+  },
+  {
+    value: "Thịt gà",
+    label: "Thịt gà",
+  },
+];
+
+export default function DishManagementPage() {
   // validation
   const {
-    register,
+    // register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
     dispatch(addBrand(data));
@@ -49,18 +72,6 @@ export default function BrandManagementPage() {
     dispatch(getAllBrand());
     //listBrands = useSelector((state) => state.brand);
   }, []);
-  // page
-  const [page, setPage] = useState(2);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
 
   // dialog
   const [open, setOpen] = React.useState(false);
@@ -75,6 +86,28 @@ export default function BrandManagementPage() {
     setOpen(false);
   };
 
+  const handleDelete = (chipToDelete) => () => {
+    setChipDataSelect((chips) =>
+      chips.filter((chip) => chip.key !== chipToDelete.key)
+    );
+  };
+
+  const [chipData] = React.useState([
+    { key: 0, label: "Thịt Thăn Bò Hàn Quốc" },
+    { key: 1, label: "Thịt Thăn Bò Mỹ" },
+    { key: 2, label: "Thịt Thăn Bò Úc" },
+    { key: 3, label: "Thịt Thăn Thái Lan" },
+  ]);
+
+  const [chipDataSelect, setChipDataSelect] = React.useState([
+    { key: 0, label: "Thịt Thăn Bò Úc" },
+    { key: 1, label: "Thịt Thăn Thái Lan" },
+  ]);
+
+  const handleClick = () => {
+    console.info("You clicked the Chip.");
+  };
+
   return (
     <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
@@ -84,7 +117,7 @@ export default function BrandManagementPage() {
             startIcon={<AddCircleIcon />}
             onClick={handleClickOpen}
           >
-            <span>Add New Brand</span>
+            <span>Thêm mới</span>
           </Button>
         </Stack>
 
@@ -96,37 +129,202 @@ export default function BrandManagementPage() {
           onBackdropClick="false"
         >
           <form>
-            <DialogTitle>Add new brand</DialogTitle>
+            <DialogTitle>Thêm mới</DialogTitle>
             <DialogContent>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="brandname"
-                label="brandname"
-                type="text"
-                fullWidth
-                name="brandname"
-                {...register("brandname", {
-                  required: "Brand name is required.",
-                })}
-                error={Boolean(errors.brandname)}
-                helperText={errors.brandname?.message}
-                variant="outlined"
-              />
+              <Box
+                component="form"
+                sx={{
+                  "& .MuiTextField-root": { m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <div>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    id="dishName"
+                    label="Tên món ăn"
+                    type="text"
+                    name="description"
+                    variant="outlined"
+                  />
+                </div>
+                <div>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    margin="dense"
+                    id="description"
+                    label="Mô tả"
+                    type="text"
+                    name="description"
+                    variant="outlined"
+                  />
+                </div>
+                <div>
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    margin="dense"
+                    id="cook"
+                    label="Cách nấu ăn"
+                    type="text"
+                    name="description"
+                    variant="outlined"
+                  />
+                </div>
+              </Box>
+
+              <Box
+                component="form"
+                sx={{
+                  "& .MuiTextField-root": { m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <h4>
+                  <b>Nguyên liệu nấu ăn</b>
+                </h4>
+                <div>
+                  {/* chon category */}
+                  <TextField
+                    fullWidth
+                    id="outlined-select-currency"
+                    select
+                    label="Nguyên liệu"
+                    // onChange={handleChange}
+                  >
+                    {currencies.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+
+                  <Box sx={{ m: 2 }}>
+                    <div>
+                      <Paper
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          flexWrap: "wrap",
+                          listStyle: "none",
+                          p: 0.5,
+                          m: 1,
+                        }}
+                        component="ul"
+                        elevation={0}
+                      >
+                        {chipData.map((data) => {
+                          return (
+                            <ListItem key={data.key}>
+                              <Chip label={data.label} onClick={handleClick} />
+                            </ListItem>
+                          );
+                        })}
+                      </Paper>
+                    </div>
+                    <div>
+                      <Paper
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          flexWrap: "wrap",
+                          listStyle: "none",
+                          p: 0.5,
+                          m: 1,
+                        }}
+                        component="ul"
+                        variant="outlined"
+                      >
+                        {chipDataSelect.map((data) => {
+                          let icon;
+
+                          return (
+                            <ListItem key={data.key}>
+                              <Chip
+                                icon={icon}
+                                label={data.label}
+                                onDelete={
+                                  data.label === "React"
+                                    ? undefined
+                                    : handleDelete(data)
+                                }
+                              />
+                            </ListItem>
+                          );
+                        })}
+                      </Paper>
+                    </div>
+                  </Box>
+                </div>
+              </Box>
+
+              <Box
+                component="form"
+                sx={{
+                  "& .MuiTextField-root": { m: 1 },
+                }}
+                noValidate
+                autoComplete="off"
+              >
+                <div>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    id="productName"
+                    label="Tên sản phẩm"
+                    type="text"
+                    name="description"
+                    variant="outlined"
+                  />
+                </div>
+                <div>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    id="quantity"
+                    label="Số lượng"
+                    type="text"
+                    name="description"
+                    variant="outlined"
+                  />
+                </div>
+                <div>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    id="unitName"
+                    label="Tên đơn vị"
+                    type="text"
+                    name="description"
+                    variant="outlined"
+                  />
+                </div>
+                <div>
+                  <Button startIcon={<AddCircleIcon />}>
+                    Thêm nguyên liệu
+                  </Button>
+                </div>
+              </Box>
             </DialogContent>
             <DialogActions>
-              <Button type="submit">Save</Button>
-              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={handleClose}>Hủy</Button>
+              <Button type="submit">Lưu</Button>
             </DialogActions>
           </form>
         </Dialog>
 
         <Card>
-          <CardHeader color="primary"></CardHeader>
+          <CardHeader color="warning"></CardHeader>
           <CardBody>
             <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "Brand name", "Actions"]}
+              tableHeaderColor="warning"
+              tableHead={["ID", "Tên món ăn", ""]}
               tableData={listBrands.map((brand) => {
                 // console.log(brand);
                 return [brand.brandId, brand.brandname];
@@ -134,14 +332,6 @@ export default function BrandManagementPage() {
               editData={listBrands}
             />
           </CardBody>
-          <TablePagination
-            component="div"
-            count={100}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
         </Card>
       </GridItem>
     </GridContainer>
