@@ -23,8 +23,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 // validation
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux/es/exports";
-import { getAllBrand } from "actions/brand";
-import { addBrand } from "actions/brand";
 
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
@@ -32,44 +30,46 @@ import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 
 import Box from "@mui/material/Box";
+import { getAllDish } from "actions/dish";
+import { getAllCategories } from "actions/category";
+import * as api from "../../apis/product";
+import { addDish } from "actions/dish";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
-const currencies = [
-  {
-    value: "Thịt heo",
-    label: "Thịt heo",
-  },
-  {
-    value: "Thịt bò",
-    label: "Thịt bò",
-  },
-  {
-    value: "Thịt gà",
-    label: "Thịt gà",
-  },
-];
-
 export default function DishManagementPage() {
   // validation
   const {
-    // register,
+    register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
+    resetField,
   } = useForm();
   const onSubmit = async (data) => {
-    dispatch(addBrand(data));
+    const inputData = {
+      dishName: data.dishName,
+      dishDescription: data.description,
+      dishCooking: data.dishCooking,
+      addDishDetails: products.map((pro) => {
+        return {
+          productId: chipDataSelect.map((chip) => chip.productId),
+          quantity: pro.quantity,
+          unitName: pro.unitName,
+          productName: pro.productName,
+        };
+      }),
+    };
+    dispatch(addDish(inputData));
     handleClose();
-    dispatch(getAllBrand());
-    window.location.reload();
-    //fetchBrand();
   };
   const dispatch = useDispatch();
-  const listBrands = useSelector((state) => state.brand);
+  const dishs = useSelector((state) => state.dish);
+  const categories = useSelector((state) => state.category);
   useEffect(() => {
-    dispatch(getAllBrand());
+    dispatch(getAllCategories());
+    dispatch(getAllDish());
     //listBrands = useSelector((state) => state.brand);
   }, []);
 
@@ -78,34 +78,57 @@ export default function DishManagementPage() {
 
   // open dialog
   const handleClickOpen = () => {
+    categories.push({ categoryId: 0, categoryName: "Chọn nguyên liệu" });
     setOpen(true);
   };
 
   // close dialog
   const handleClose = () => {
+    resetField("dishName");
+    resetField("description");
+    resetField("dishCooking");
+    setProducts([{ productName: "", unitName: "", quantity: 0 }]);
     setOpen(false);
   };
 
   const handleDelete = (chipToDelete) => () => {
     setChipDataSelect((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
+      chips.filter((chip) => chip.productId !== chipToDelete.productId)
     );
   };
+  const handleChangeCate = async (event) => {
+    //console.log(event.target.value);
+    const res = await api.getAllProductByCategory(event.target.value);
+    //console.log(res.data);
+    setChipData(res.data);
+  };
 
-  const [chipData] = React.useState([
-    { key: 0, label: "Thịt Thăn Bò Hàn Quốc" },
-    { key: 1, label: "Thịt Thăn Bò Mỹ" },
-    { key: 2, label: "Thịt Thăn Bò Úc" },
-    { key: 3, label: "Thịt Thăn Thái Lan" },
+  const [chipData, setChipData] = React.useState([]);
+
+  const [chipDataSelect, setChipDataSelect] = React.useState([]);
+  const [products, setProducts] = React.useState([
+    { productName: "", unitName: "", quantity: 0 },
   ]);
-
-  const [chipDataSelect, setChipDataSelect] = React.useState([
-    { key: 0, label: "Thịt Thăn Bò Úc" },
-    { key: 1, label: "Thịt Thăn Thái Lan" },
-  ]);
-
-  const handleClick = () => {
-    console.info("You clicked the Chip.");
+  const handleAdd = () => {
+    setProducts([...products, { productName: "", unitName: "", quantity: 0 }]);
+  };
+  const handleRemove = (index) => {
+    const list = [...products];
+    list.splice(index, 1);
+    setProducts(list);
+  };
+  const handleProductChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...products];
+    list[index][name] = value;
+    setProducts(list);
+  };
+  const handleClick = (e, data) => {
+    !chipDataSelect.some((pro) => pro.productId === data.productId) &&
+      setChipDataSelect((prev) => [
+        ...prev,
+        { productName: data.productName, productId: data.productId },
+      ]);
   };
 
   return (
@@ -146,8 +169,13 @@ export default function DishManagementPage() {
                     id="dishName"
                     label="Tên món ăn"
                     type="text"
-                    name="description"
+                    name="dishName"
                     variant="outlined"
+                    {...register("dishName", {
+                      required: "Dish name is required.",
+                    })}
+                    error={!!errors.dishName}
+                    helperText={errors.dishName?.message}
                   />
                 </div>
                 <div>
@@ -161,6 +189,11 @@ export default function DishManagementPage() {
                     type="text"
                     name="description"
                     variant="outlined"
+                    {...register("description", {
+                      required: "Description is required.",
+                    })}
+                    error={!!errors.description}
+                    helperText={errors.description?.message}
                   />
                 </div>
                 <div>
@@ -172,8 +205,13 @@ export default function DishManagementPage() {
                     id="cook"
                     label="Cách nấu ăn"
                     type="text"
-                    name="description"
+                    name="dishCooking"
                     variant="outlined"
+                    {...register("dishCooking", {
+                      required: "Dish cooking is required.",
+                    })}
+                    error={!!errors.dishCooking}
+                    helperText={errors.dishCooking?.message}
                   />
                 </div>
               </Box>
@@ -196,11 +234,15 @@ export default function DishManagementPage() {
                     id="outlined-select-currency"
                     select
                     label="Nguyên liệu"
-                    // onChange={handleChange}
+                    onChange={handleChangeCate}
+                    value={0}
                   >
-                    {currencies.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {categories.map((option) => (
+                      <MenuItem
+                        key={option.categoryId}
+                        value={option.categoryId}
+                      >
+                        {option.categoryName}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -221,8 +263,11 @@ export default function DishManagementPage() {
                       >
                         {chipData.map((data) => {
                           return (
-                            <ListItem key={data.key}>
-                              <Chip label={data.label} onClick={handleClick} />
+                            <ListItem key={data.productId}>
+                              <Chip
+                                label={data.productName}
+                                onClick={(e) => handleClick(e, data)}
+                              />
                             </ListItem>
                           );
                         })}
@@ -245,12 +290,12 @@ export default function DishManagementPage() {
                           let icon;
 
                           return (
-                            <ListItem key={data.key}>
+                            <ListItem key={data.productId}>
                               <Chip
                                 icon={icon}
-                                label={data.label}
+                                label={data.productName}
                                 onDelete={
-                                  data.label === "React"
+                                  data.productName === "React"
                                     ? undefined
                                     : handleDelete(data)
                                 }
@@ -272,41 +317,57 @@ export default function DishManagementPage() {
                 noValidate
                 autoComplete="off"
               >
+                {products.map((pro, index) => (
+                  <div key={index}>
+                    <div>
+                      <TextField
+                        fullWidth
+                        margin="dense"
+                        id="productName"
+                        label="Tên sản phẩm"
+                        type="text"
+                        name="productName"
+                        variant="outlined"
+                        value={pro.productName}
+                        onChange={(e) => handleProductChange(e, index)}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        margin="dense"
+                        id="quantity"
+                        label="Số lượng"
+                        type="text"
+                        name="quantity"
+                        variant="outlined"
+                        value={pro.quantity}
+                        onChange={(e) => handleProductChange(e, index)}
+                      />
+                    </div>
+                    <div>
+                      <TextField
+                        fullWidth
+                        margin="dense"
+                        id="unitName"
+                        label="Tên đơn vị"
+                        type="text"
+                        name="unitName"
+                        variant="outlined"
+                        value={pro.unitName}
+                        onChange={(e) => handleProductChange(e, index)}
+                      />
+                    </div>
+                    <Button
+                      startIcon={<AddCircleIcon />}
+                      onClick={() => handleRemove(index)}
+                    >
+                      Xóa nguyên liệu
+                    </Button>
+                  </div>
+                ))}
                 <div>
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="productName"
-                    label="Tên sản phẩm"
-                    type="text"
-                    name="description"
-                    variant="outlined"
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="quantity"
-                    label="Số lượng"
-                    type="text"
-                    name="description"
-                    variant="outlined"
-                  />
-                </div>
-                <div>
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="unitName"
-                    label="Tên đơn vị"
-                    type="text"
-                    name="description"
-                    variant="outlined"
-                  />
-                </div>
-                <div>
-                  <Button startIcon={<AddCircleIcon />}>
+                  <Button startIcon={<AddCircleIcon />} onClick={handleAdd}>
                     Thêm nguyên liệu
                   </Button>
                 </div>
@@ -324,12 +385,17 @@ export default function DishManagementPage() {
           <CardBody>
             <Table
               tableHeaderColor="warning"
-              tableHead={["ID", "Tên món ăn", ""]}
-              tableData={listBrands.map((brand) => {
+              tableHead={["ID", "Tên món ăn", "Mô tả", "Cách nấu", ""]}
+              tableData={dishs.map((dish) => {
                 // console.log(brand);
-                return [brand.brandId, brand.brandname];
+                return [
+                  dish.dishId,
+                  dish.dishName,
+                  dish.dishDescription,
+                  dish.dishCooking,
+                ];
               })}
-              editData={listBrands}
+              editData={dishs}
             />
           </CardBody>
         </Card>
